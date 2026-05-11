@@ -1,5 +1,0 @@
-# Pastikan /game tidak dialihkan ke mana-mana (berhenti di sini)
-/game /game 200
-
-# Baru kemudian alihkan sisanya ke /game
-/* /game 301
