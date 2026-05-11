@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LintasIndo - Halaman 3</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        /* ============================
+           CSS Custom Properties
+           ============================ */
+        :root {
+            --bg: #1a1a2e;
+            --fg: #ffffff;
+            --muted: #a0a0b0;
+            --accent: #F5A623;
+            --accent-glow: rgba(245, 166, 35, 0.4);
+            --red: #E74C3C;
+            --red-glow: rgba(231, 76, 60, 0.3);
+            --green: #43A047;
+            --card: rgba(10, 10, 20, 0.85);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --font-display: 'Fredoka', cursive, sans-serif;
+            --font-body: 'Nunito', sans-serif;
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
+            font-family: var(--font-body);
+            background: var(--bg);
+            color: var(--fg);
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* ============================
+           Background & Overlays
+           ============================ */
+        #bg-layer {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-size: cover;
+            background-position: center;
+            background-color: var(--bg);
+            transition: opacity 1.2s ease;
+        }
+
+        #bg-layer.fade {
+            opacity: 0;
+        }
+
+        #vignette {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            background: radial-gradient(ellipse at 5% 5%, transparent 40%, rgba(0, 0, 0, 0.6) 100%);
+            pointer-events: none;
+        }
+
+        #overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 2;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, transparent 40%, rgba(0, 0, 0, 0.7) 100%);
+            pointer-events: none;
+        }
+
+        /* ============================
+           Karakter Sprite
+           ============================ */
+        #chara-container {
+            position: fixed;
+            bottom: 220px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        #chara-container.hidden {
+            opacity: 0;
+        }
+
+        .chara-img {
+            max-height: 50vh;
+            max-width: 80vw;
+            object-fit: contain;
+            filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.6));
+        }
+
+        .chara-enter {
+            animation: charaSlideUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        @keyframes charaSlideUp {
+            from {
+                transform: translateY(40px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* ============================
+           Dialog Box
+           ============================ */
+        #dialog-wrapper {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 20;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+
+        #dialog-wrapper.visible {
+            opacity: 1;
+        }
+
+        #dialog-box {
+            width: 100%;
+            max-width: 900px;
+            background: var(--card);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            border-radius: 18px;
+            padding: 24px 32px 28px;
+            position: relative;
+            cursor: pointer;
+            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        #char-name {
+            position: absolute;
+            top: -16px;
+            left: 24px;
+            background: var(--accent);
+            color: #1a1a2e;
+            font-family: var(--font-display);
+            font-weight: 700;
+            padding: 6px 20px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: opacity 0.3s, background 0.3s;
+        }
+
+        #char-name.hidden-name {
+            opacity: 0;
+        }
+
+        #char-name.name-player {
+            background: var(--green);
+        }
+
+        #dialog-text {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: #fff;
+            min-height: 4.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        #next-indicator {
+            position: absolute;
+            bottom: 12px;
+            right: 20px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 10px solid var(--accent);
+            animation: bounce-down 1s infinite ease-in-out;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        #next-indicator.show {
+            opacity: 1;
+        }
+
+        @keyframes bounce-down {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(5px);
+            }
+        }
+
+        /* ============================
+           Pilihan Cabang
+           ============================ */
+        #choice-container {
+            position: fixed;
+            inset: 0;
+            z-index: 30;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(6px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        #choice-container.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .choice-btn {
+            background: rgba(245, 166, 35, 0.12);
+            border: 2px solid var(--accent);
+            color: #fff;
+            padding: 16px 36px;
+            font-size: 1.1rem;
+            font-family: var(--font-display);
+            font-weight: 600;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            min-width: 320px;
+            text-align: center;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            width: 280px;
+            height: auto;
+            min-height: 240px;
+            padding: 24px;
+        }
+
+        .choice-btn:hover {
+            background: var(--accent);
+            color: #1a1a2e;
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 24px var(--accent-glow);
+        }
+
+        /* Ikon kecil di dalam tombol pilihan */
+        .choice-icon {
+            width: 140px;
+            height: 140px;
+            border-radius: 12px;
+            object-fit: contain;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px;
+        }
+
+        /* ============================
+           Transisi Fade Hitam
+           ============================ */
+        #transition {
+            position: fixed;
+            inset: 0;
+            z-index: 500;
+            background: #000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1s ease;
+        }
+
+        #transition.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* ============================
+           Responsif
+           ============================ */
+        @media (max-width: 600px) {
+            .chara-img {
+                max-height: 40vh;
+            }
+
+            #dialog-box {
+                padding: 20px 20px 24px;
+                border-radius: 14px;
+            }
+
+            #dialog-text {
+                font-size: 1rem;
+                min-height: 3.5rem;
+            }
+
+            .choice-btn {
+                min-width: 260px;
+                padding: 14px 24px;
+                font-size: 1rem;
+            }
+
+            #char-name {
+                font-size: 0.85rem;
+                padding: 4px 14px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.2s !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <audio id="myBGM" src="../../../gudang/tio/flu.mp3" loop></audio>
+
+    <script>
+        // Fungsi untuk memutar audio setelah interaksi user
+        function startBGM() {
+            const audio = document.getElementById('myBGM');
+            audio.play().catch(error => {
+                console.log("Autoplay diblokir, menunggu klik user.");
+            });
+            // Hapus event listener setelah musik berhasil jalan sekali
+            document.removeEventListener('click', startBGM);
+            document.removeEventListener('touchstart', startBGM);
+        }
+
+        // Jalankan musik begitu user klik atau tap di mana saja di halaman ini
+        document.addEventListener('click', startBGM);
+        document.addEventListener('touchstart', startBGM);
+    </script>
+
+    <!-- Background Layer -->
+    <div id="bg-layer" aria-hidden="true"></div>
+    <div id="vignette" aria-hidden="true"></div>
+    <div id="overlay" aria-hidden="true"></div>
+
+    <!-- Karakter Sprite -->
+    <div id="chara-container" class="hidden" aria-hidden="true">
+        <img id="chara-img" class="chara-img" alt="Karakter" />
+    </div>
+
+    <!-- Dialog Box -->
+    <div id="dialog-wrapper">
+        <div id="dialog-box" role="button" tabindex="0" aria-label="Klik untuk lanjut">
+            <div id="char-name" class="hidden-name">Petugas</div>
+            <div id="dialog-text"></div>
+            <div id="next-indicator"></div>
+        </div>
+    </div>
+
+    <!-- Pilihan Cabang -->
+    <div id="choice-container" role="menu"></div>
+
+    <!-- Transisi -->
+    <div id="transition" aria-hidden="true"></div>
+
+    <script>
+        /* ================================================
+           Konfigurasi Aset (Path Relatif)
+           ================================================ */
+        const ASSETS = {
+            bg: {
+                dalam: '../../../gudang/bg/dalamsatpass.png', // Interior SATPAS
+                ngambil: '../../../gudang/bg/bgngambil.png'   // Ruang pengambilan / lorong
+            },
+            chara: {
+                polisi: '../../../gudang/man/polpol.png'
+            },
+            items: {
+                benar: '../../../gudang/tio/itembenar.png', // Surat-surat
+                salah: '../../../gudang/tio/itemsalah.png'   // Surat ket lulus
+            }
+        };
+
+        /* ================================================
+           Baca Nama Pemain dari Parameter URL (?tio=...)
+           ================================================ */
+        const urlParams = new URLSearchParams(window.location.search);
+        const playerName = urlParams.get('tio') || 'Warga';
+
+        /* ================================================
+           Data Cerita & Sistem Dialog
+           ================================================ */
+        let currentQueue = [];
+        let currentIndex = 0;
+        let isTyping = false;
+        let typeInterval = null;
+
+        /* Narasi utama halaman 3 */
+        const mainDialogs = [
+            {
+                type: 'narration',
+                text: "Kamu memasuki ruangan pemeriksaan berkas di dalam SATPAS.",
+                bg: ASSETS.bg.dalam
+            },
+            {
+                type: 'dialog',
+                name: "Petugas Polisi",
+                text: "Silakan, taruh berkasmu di meja counter. Akan saya periksa kelengkapannya.",
+                chara: ASSETS.chara.polisi
+            },
+            {
+                type: 'dialog',
+                name: playerName,
+                text: "Baik, Pak. Ini berkas saya.",
+                chara: null,
+                nameClass: 'name-player'
+            },
+            {
+                type: 'choice',
+                text: "Berkas mana yang kamu serahkan kepada Petugas?",
+                choices: [
+                    { text: "Surat Keterangan Lulus", icon: ASSETS.items.salah, branch: 'branchWrong' },
+                    { text: "Surat-surat Persyaratan (KTP & Surat Sehat)", icon: ASSETS.items.benar, branch: 'branchRight' }
+                ]
+            }
+        ];
+
+        /* Cabang cerita berdasarkan pilihan berkas */
+        const branches = {
+            branchRight: [
+                { type: 'dialog', name: "Petugas Polisi", text: "Hmm... KTP asli dan Surat Keterangan Sehat dari dokter. Semuanya lengkap dan benar. Bagus!", chara: ASSETS.chara.polisi },
+                { type: 'dialog', name: "Petugas Polisi", text: "Kamu boleh lanjut ke ruangan sebelah untuk ujian teori.", chara: ASSETS.chara.polisi }
+            ],
+            branchWrong: [
+                { type: 'dialog', name: "Petugas Polisi", text: "Hei, ini Surat Keterangan Lulus. Untuk pembuatan SIM yang kita butuhkan adalah KTP asli dan Surat Keterangan Sehat, lho.", chara: ASSETS.chara.polisi },
+                { type: 'dialog', name: playerName, text: "Ah, maaf Pak. Saya keliru mengeluarkan berkas. Ini yang benar...", chara: null, nameClass: 'name-player' },
+                { type: 'dialog', name: "Petugas Polisi", text: "Nah, ini baru benar. Semuanya lengkap. Silakan lanjut ke ruangan sebelah untuk ujian teori.", chara: ASSETS.chara.polisi }
+            ]
+        };
+
+        /* ================================================
+           Referensi DOM
+           ================================================ */
+        const $bgLayer = document.getElementById('bg-layer');
+        const $charaContainer = document.getElementById('chara-container');
+        const $charaImg = document.getElementById('chara-img');
+        const $dialogWrapper = document.getElementById('dialog-wrapper');
+        const $dialogBox = document.getElementById('dialog-box');
+        const $charName = document.getElementById('char-name');
+        const $dialogText = document.getElementById('dialog-text');
+        const $nextIndicator = document.getElementById('next-indicator');
+        const $choiceContainer = document.getElementById('choice-container');
+        const $transition = document.getElementById('transition');
+
+        /* ================================================
+           Fungsi Engine Visual Novel
+           ================================================ */
+
+        function changeBackground(url) {
+            if (!url || $bgLayer.style.backgroundImage.includes(url)) return;
+            $bgLayer.classList.add('fade');
+            setTimeout(() => {
+                $bgLayer.style.backgroundImage = `url('${url}')`;
+                $bgLayer.classList.remove('fade');
+            }, 600);
+        }
+
+        function showCharacter(url) {
+            if (url) {
+                if ($charaImg.src.endsWith(url.split('/').pop()) && !$charaContainer.classList.contains('hidden')) return;
+                $charaImg.src = url;
+                $charaContainer.classList.remove('hidden');
+                $charaImg.classList.remove('chara-enter');
+                void $charaImg.offsetWidth;
+                $charaImg.classList.add('chara-enter');
+            } else {
+                $charaContainer.classList.add('hidden');
+            }
+        }
+
+        function typeText(text, callback) {
+            isTyping = true;
+            $nextIndicator.classList.remove('show');
+            $dialogText.textContent = '';
+            let i = 0;
+
+            if (typeInterval) clearInterval(typeInterval);
+
+            typeInterval = setInterval(() => {
+                $dialogText.textContent += text.charAt(i);
+                i++;
+                if (i >= text.length) {
+                    clearInterval(typeInterval);
+                    isTyping = false;
+                    $nextIndicator.classList.add('show');
+                    if (callback) callback();
+                }
+            }, 30);
+        }
+
+        function skipTypeText(text) {
+            clearInterval(typeInterval);
+            $dialogText.textContent = text;
+            isTyping = false;
+            $nextIndicator.classList.add('show');
+        }
+
+        function processDialog() {
+            if (currentIndex >= currentQueue.length) return;
+
+            const data = currentQueue[currentIndex];
+
+            if (data.bg) changeBackground(data.bg);
+
+            if (data.type === 'narration') {
+                $charName.classList.add('hidden-name');
+                showCharacter(null);
+                typeText(data.text);
+            }
+            else if (data.type === 'dialog') {
+                $charName.classList.remove('hidden-name');
+                $charName.textContent = data.name;
+
+                // Styling tambahan untuk nama pemain
+                if (data.nameClass) {
+                    $charName.classList.add(data.nameClass);
+                } else {
+                    $charName.classList.remove('name-player');
+                }
+
+                showCharacter(data.chara);
+                typeText(data.text);
+            }
+            else if (data.type === 'choice') {
+                $charName.classList.add('hidden-name');
+                typeText(data.text, () => {
+                    renderChoices(data.choices);
+                });
+            }
+        }
+
+        function renderChoices(choices) {
+            $choiceContainer.innerHTML = '';
+            choices.forEach(c => {
+                const btn = document.createElement('button');
+                btn.className = 'choice-btn';
+
+                // Jika pilihan memiliki ikon item, tambahkan ke tombol
+                if (c.icon) {
+                    const img = document.createElement('img');
+                    img.src = c.icon;
+                    img.className = 'choice-icon';
+                    img.alt = c.text;
+                    btn.appendChild(img);
+                }
+
+                const textSpan = document.createElement('span');
+                textSpan.textContent = c.text;
+                textSpan.style.display = 'block';
+                textSpan.style.marginTop = '8px';
+                btn.appendChild(textSpan);
+
+                btn.onclick = () => handleChoice(c.branch);
+                $choiceContainer.appendChild(btn);
+            });
+            $choiceContainer.classList.add('active');
+        }
+
+        function handleChoice(branchName) {
+            $choiceContainer.classList.remove('active');
+            currentQueue = branches[branchName];
+            currentIndex = 0;
+            processDialog();
+        }
+
+        function handleNext() {
+            if (isTyping) {
+                skipTypeText(currentQueue[currentIndex].text);
+                if (currentQueue[currentIndex].type === 'choice') {
+                    renderChoices(currentQueue[currentIndex].choices);
+                }
+            } else {
+                if ($choiceContainer.classList.contains('active')) return;
+
+                currentIndex++;
+                if (currentIndex < currentQueue.length) {
+                    processDialog();
+                } else {
+                    goToNextPage();
+                }
+            }
+        }
+
+        $dialogBox.addEventListener('click', handleNext);
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleNext();
+            }
+        });
+
+        /* ================================================
+           Navigasi Halaman Berikutnya
+           ================================================ */
+        function goToNextPage() {
+            $transition.classList.add('active');
+            setTimeout(() => {
+                window.location.href = '../uji-teori?tio=' + encodeURIComponent(playerName);
+            }, 1200);
+        }
+
+        /* ================================================
+           Inisialisasi Halaman
+           ================================================ */
+        function init() {
+            $transition.classList.add('active');
+
+            if (mainDialogs[0].bg) {
+                $bgLayer.style.backgroundImage = `url('${mainDialogs[0].bg}')`;
+            }
+
+            setTimeout(() => {
+                $transition.classList.remove('active');
+                $dialogWrapper.classList.add('visible');
+
+                currentQueue = mainDialogs;
+                currentIndex = 0;
+                processDialog();
+            }, 800);
+        }
+
+        init();
+    </script>
+</body>
+
+</html>

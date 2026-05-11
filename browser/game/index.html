@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LintasIndo - Visual Novel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="./gudang/gaya/main.min.css">
+</head>
+
+<body>
+
+    <!-- Portrait Warning -->
+    <div id="orientation-warning">
+        <i class="fas fa-mobile-screen-button"></i>
+        <h2>Mode Lanskap Diperlukan</h2>
+        <p>Silakan putar perangkat Anda ke posisi horizontal untuk memainkan game ini.</p>
+    </div>
+
+    <div id="loading" role="status" aria-label="Memuat game">
+        <div class="loader-ring"></div>
+        <div class="loader-text">Memuat</div>
+    </div>
+
+    <div id="bg-layer" aria-hidden="true"></div>
+    <div id="vignette" aria-hidden="true"></div>
+    <div id="overlay" aria-hidden="true"></div>
+    <div id="particles" aria-hidden="true"></div>
+
+    <div id="title-screen" role="button" tabindex="0" aria-label="Ketuk untuk memulai game">
+        <!-- Logo teks disembunyikan karena sudah ada di dalam gambar background -->
+        <div class="game-logo">
+            <span class="logo-lintas">Lintas</span><span class="logo-indo">Indo</span>
+        </div>
+        <div class="logo-line"></div>
+        <div class="game-subtitle">Petualangan Lalu Lintas</div>
+
+        <div class="start-prompt">Ketuk untuk Memulai!</div>
+    </div>
+
+    <div id="input-screen" role="dialog" aria-label="Masukkan nama pemain">
+        <div class="input-card">
+            <div class="chara-wrap">
+                <img class="chara-sprite" id="chara-sprite" alt="Karakter Polisi" />
+                <span class="chara-name">Petugas</span>
+            </div>
+            <div class="input-area">
+                <label class="input-label" for="name-input">Wahai anak muda, Siapa namamu?</label>
+                <input type="text" class="name-input" id="name-input" placeholder="Masukkan namamu..." maxlength="20"
+                    autocomplete="off" aria-required="true" />
+                <div class="input-hint" id="input-hint">Nama tidak boleh kosong</div>
+                <button class="btn-lanjut" id="btn-lanjut" disabled aria-label="Lanjutkan ke game">Lanjutkan</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="transition" aria-hidden="true"></div>
+    <script src="./gudang/data/main.js"></script>
+</body>
+
+</html>

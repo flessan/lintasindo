@@ -1,0 +1,625 @@
+:root {
+    --bg: #dfe6e9;
+    --fg: #1e272e;
+    --muted: #636e72;
+    --accent: #F5A623;
+    --accent-glow: rgba(245, 166, 35, 0.4);
+    --sim-red: #d63031;
+    --pop-blue: #0984e3;
+    --pop-black: #1e272e;
+    --font-display: 'Fredoka', cursive, sans-serif;
+    --font-body: 'Nunito', sans-serif;
+}
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: var(--bg);
+    background-image: radial-gradient(var(--pop-blue) 1px, transparent 1px);
+    background-size: 30px 30px;
+    color: var(--fg);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    overflow-x: hidden;
+}
+
+/* Portrait Warning */
+#orientation-warning {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: var(--pop-black);
+    color: #fff;
+    z-index: 9999;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px;
+}
+
+#orientation-warning i {
+    font-size: 60px;
+    margin-bottom: 20px;
+    color: var(--accent);
+    animation: rotateDevice 2s ease-in-out infinite;
+}
+
+@keyframes rotateDevice {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    50% {
+        transform: rotate(-90deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+@media (orientation: portrait) and (max-width: 900px) {
+    #orientation-warning {
+        display: flex;
+    }
+}
+
+header {
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+h1 {
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 5vw, 2.2rem);
+    font-weight: 700;
+    background: var(--accent);
+    color: var(--pop-black);
+    padding: 10px 28px;
+    border: 4px solid var(--pop-black);
+    box-shadow: 6px 6px 0 var(--pop-black);
+    display: inline-block;
+    transform: rotate(-1deg);
+}
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    max-width: 1100px;
+}
+
+@media (min-width: 950px) {
+    .main-container {
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 40px;
+        padding-top: 20px;
+    }
+
+    .card-wrapper {
+        flex: 1;
+        max-width: 650px;
+    }
+
+    .side-controls {
+        width: 320px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+}
+
+.help-banner {
+    background: #fff;
+    border: 3px solid var(--pop-black);
+    padding: 10px 24px;
+    border-radius: 50px;
+    box-shadow: 4px 4px 0 var(--pop-blue);
+    font-weight: 800;
+    color: var(--pop-blue);
+    font-size: 0.95rem;
+}
+
+/* --- REALISTIC SIM CARD --- */
+.card-wrapper {
+    perspective: 1000px;
+    width: 100%;
+    max-width: 600px;
+}
+
+.sim-card {
+    width: 100%;
+    aspect-ratio: 85.6/54;
+    background: #f0f0f0;
+    background-image:
+        radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.02) 1px, transparent 1px),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, transparent 100%);
+    background-size: 20px 20px, 100% 100%;
+    border-radius: 14px;
+    border: 1px solid #bbb;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25), 10px 10px 0 var(--pop-blue);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    user-select: none;
+    font-family: 'Outfit', sans-serif;
+    transition: transform 0.3s ease;
+}
+
+/* Watermark Background */
+.sim-card::before {
+    content: 'IDN';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-30deg);
+    font-size: 120px;
+    font-weight: 900;
+    color: rgba(0, 0, 0, 0.03);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Security Lines Overlay */
+.sim-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: repeating-radial-gradient(circle at 100% 0%, transparent 0, transparent 40px, rgba(255, 255, 255, 0.15) 41px, rgba(255, 255, 255, 0.15) 42px, transparent 43px);
+    pointer-events: none;
+    z-index: 5;
+}
+
+.sim-card:hover {
+    transform: rotateY(-5deg) rotateX(2deg);
+}
+
+/* New Header Structure */
+.sim-header-main {
+    height: 22%;
+    position: relative;
+    z-index: 10;
+}
+
+.sim-header-red {
+    background: var(--sim-red);
+    height: 65%;
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Pattern for red part */
+.sim-header-red::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.1) 0, rgba(255, 255, 255, 0.1) 1px, transparent 1px, transparent 10px);
+}
+
+.sim-logo {
+    width: 32px;
+    height: 32px;
+    margin-right: 12px;
+    position: relative;
+    z-index: 2;
+    filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.2));
+}
+
+.sim-indonesia {
+    font-size: 18px;
+    font-weight: 900;
+    letter-spacing: 3px;
+    margin-left: 10px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.sim-dl-en {
+    font-size: 9px;
+    font-weight: 800;
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.9;
+    letter-spacing: 0.5px;
+}
+
+.sim-header-silver {
+    background: linear-gradient(to bottom, #fdfdfd, #d0d0d0);
+    height: 35%;
+    display: flex;
+    align-items: center;
+    padding-left: 55px;
+    border-bottom: 1px solid #999;
+}
+
+.sim-title-label {
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    color: var(--sim-red);
+}
+
+/* Class & No Container (Top Right) */
+.sim-class-no-container {
+    position: absolute;
+    top: 24%;
+    right: 15px;
+    text-align: right;
+    z-index: 10;
+}
+
+.sim-class-box {
+    font-size: 32px;
+    font-weight: 900;
+    color: #111;
+    line-height: 0.8;
+    margin-bottom: 4px;
+    cursor: pointer;
+}
+
+.sim-number {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 15px;
+    font-weight: 800;
+    color: #222;
+    letter-spacing: 0.5px;
+    outline: none;
+}
+
+.sim-class-box {
+    font-family: 'Outfit';
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--pop-black);
+    line-height: 1;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.sim-class-box:hover {
+    color: var(--sim-red);
+}
+
+.sim-number {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--pop-black);
+    letter-spacing: 1px;
+    outline: none;
+}
+
+.sim-content {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 30% 1fr;
+    padding: 5px 15px 10px;
+    gap: 12px;
+    position: relative;
+    z-index: 2;
+}
+
+.sim-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.sim-photo-main {
+    width: 100%;
+    aspect-ratio: 3/4;
+    border: 1px solid #ddd;
+    background: #eee;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.sim-photo-main img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.sim-photo-hint {
+    font-size: 10px;
+    color: #999;
+    font-weight: 800;
+    text-align: center;
+    position: absolute;
+    pointer-events: none;
+}
+
+.sim-sig-box {
+    width: 100%;
+    height: 35px;
+    position: relative;
+    cursor: crosshair;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.sim-sig-canvas {
+    width: 100%;
+    height: 100%;
+}
+
+.sim-sig-text-hint {
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 7px;
+    color: #ccc;
+    pointer-events: none;
+}
+
+.sim-data-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    font-size: 10.5px;
+    font-weight: 800;
+    color: #111;
+    padding-top: 15px;
+}
+
+.sim-data-item {
+    display: flex;
+    gap: 8px;
+    line-height: 1.2;
+}
+
+.sim-data-num {
+    min-width: 15px;
+    font-weight: 900;
+}
+
+.sim-data-val {
+    flex: 1;
+    outline: none;
+    border-bottom: 1px transparent;
+    text-transform: uppercase;
+    font-weight: 800;
+}
+
+.sim-data-val:focus {
+    background: rgba(9, 132, 227, 0.1);
+    border-bottom: 1px dotted #ccc;
+}
+
+.sim-data-val.clickable {
+    cursor: pointer;
+}
+
+.sim-data-val.clickable:hover {
+    color: var(--sim-red);
+}
+
+.sim-bottom-right {
+    position: absolute;
+    bottom: 10px;
+    right: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 5px;
+}
+
+.sim-photo-small {
+    width: 32px;
+    height: 42px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background: #eee;
+    overflow: hidden;
+    opacity: 0.5;
+    filter: grayscale(100%) contrast(1.2);
+    mix-blend-mode: multiply;
+}
+
+.sim-photo-small img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(50%);
+}
+
+.sim-expiry {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 13px;
+    font-weight: 900;
+    color: #111;
+    outline: none;
+    margin-top: 2px;
+}
+
+/* Buttons */
+.controls-area {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.btn-pop {
+    font-family: var(--font-display);
+    padding: 12px 22px;
+    border: 3px solid var(--pop-black);
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: all 0.15s;
+    box-shadow: 4px 4px 0 var(--pop-black);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-pop:active {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0 var(--pop-black);
+}
+
+.btn-blue {
+    background: var(--pop-blue);
+    color: #fff;
+}
+
+.btn-yellow {
+    background: var(--accent);
+    color: var(--pop-black);
+}
+
+.btn-green {
+    background: #00b894;
+    color: #fff;
+}
+
+.btn-dark {
+    background: var(--pop-black);
+    color: #fff;
+}
+
+#toast {
+    position: fixed;
+    top: 20px;
+    background: var(--pop-black);
+    color: #fff;
+    padding: 12px 28px;
+    border-radius: 50px;
+    font-family: var(--font-display);
+    font-size: 1rem;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 100;
+    border: 3px solid var(--accent);
+    pointer-events: none;
+}
+
+#toast.show {
+    opacity: 1;
+}
+
+/* How-To Modal */
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background: #fff;
+    border: 4px solid var(--pop-black);
+    padding: 30px;
+    max-width: 500px;
+    width: 100%;
+    position: relative;
+    box-shadow: 10px 10px 0 var(--pop-blue);
+    animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes modalPop {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.modal-header {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: var(--pop-blue);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.modal-body {
+    line-height: 1.6;
+    font-weight: 700;
+}
+
+.modal-body ul {
+    list-style: none;
+    padding: 0;
+}
+
+.modal-body li {
+    margin-bottom: 12px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+
+.modal-body i {
+    color: var(--accent);
+    margin-top: 4px;
+}
+
+.close-modal {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: var(--muted);
+    transition: color 0.2s;
+}
+
+.close-modal:hover {
+    color: var(--sim-red);
+}
+
+.how-to-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+}
+
+@media (max-width: 900px) {
+    .how-to-btn {
+        top: 10px;
+        right: 10px;
+        padding: 8px 12px;
+        font-size: 0.8rem;
+    }
+}

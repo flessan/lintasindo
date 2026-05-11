@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no,maximum-scale=1.0">
+    <title>Motor Tes - Sirkuit Nusantara</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bungee&family=Nunito:wght@400;700;900&family=Outfit:wght@400;600;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="jalansentul.max.css">
+</head>
+
+<body>
+
+    <audio id="myBGM" src="../../../gudang/tio/wkn.mp3" loop></audio>
+
+    <script>
+        // Fungsi untuk memutar audio setelah interaksi user
+        function startBGM() {
+            const audio = document.getElementById('myBGM');
+            audio.play().catch(error => {
+                console.log("Autoplay diblokir, menunggu klik user.");
+            });
+            // Hapus event listener setelah musik berhasil jalan sekali
+            document.removeEventListener('click', startBGM);
+            document.removeEventListener('touchstart', startBGM);
+        }
+
+        // Jalankan musik begitu user klik atau tap di mana saja di halaman ini
+        document.addEventListener('click', startBGM);
+        document.addEventListener('touchstart', startBGM);
+    </script>
+
+    <canvas id="gameCanvas"></canvas>
+
+    <div id="hud" style="display:none">
+        <div class="hud-box" id="timer-box">Waktu: <span id="timer">69420</span>s</div>
+        <div class="hud-box">CP: <span id="cp-count">0</span>/4</div>
+        <div class="hud-box" id="speed-box"><span id="speed-val">0</span> km/h</div>
+        <div class="hud-box" id="weather-box" style="display:none"><span style="color:#74b9ff">Hujan</span></div>
+    </div>
+
+    <div id="offtrack-warning">
+        <div id="offtrack-fill"></div><span class="wl">KELUAR JALUR!</span>
+    </div>
+    <div id="joystick-base">
+        <div id="joystick-knob"></div>
+    </div>
+    <button id="rain-toggle" style="display:none"><i class="fas fa-cloud-rain"></i> Hujan</button>
+
+    <div id="start-screen" class="overlay">
+        <div class="lvl-badge">NUSANTARA</div>
+        <h1>SIRKUIT NUSANTARA</h1>
+        <h2 style="color:#ffeaa7;font-size:clamp(12px,3.2vw,17px);margin-bottom:6px">Ujian Praktik SIM Kelas C</h2>
+        <div class="rule-box">
+            <div><span class="ir">✘</span> Nabrak pejalan kaki = <strong style="color:#ff7675">PENJARA</strong></div>
+            <div><span class="ir">✘</span> Kena cone / rambu = <strong style="color:#ff7675">GAGAL</strong></div>
+            <div><span class="ir">✘</span> Keluar jalur 3 detik = <strong style="color:#ff7675">GAGAL</strong></div>
+            <div><span class="ir">✘</span> Waktu habis = <strong style="color:#ff7675">GAGAL</strong></div>
+            <div><span class="ig">✔</span> Lewati <strong style="color:#55efc4">4 checkpoint</strong> lalu FINISH</div>
+            <div><span class="iy">⚠</span> Hati-hati <strong style="color:#ffeaa7">licin</strong> di jalur!</div>
+            <div><span class="ib">⚡</span> Ikuti <strong style="color:#74b9ff">speed boost</strong> untuk cepat!</div>
+        </div>
+        <button class="pop-btn" id="start-btn">MULAI UJIAN</button>
+        <div class="controls-hint"><span>Sentuh & geser</span><span>WASD / Arrow</span></div>
+    </div>
+
+    <div id="prison-screen" class="overlay">
+        <div class="siren"></div>
+        <div class="prison-bars">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+        <div class="prison-content">
+            <div class="prison-icon">⛓️</div>
+            <h1>ANDA DIPENJARA!</h1>
+            <p>Menabrak pejalan kaki adalah pelanggaran berat<br>pidana Pasal 354 KUHP</p>
+            <div class="prisoner-id">NO. TAHANAN: <span id="prison-id"></span></div><br>
+            <button class="pop-btn orange" id="prison-eval-btn">LIHAT PUTUSAN</button>
+        </div>
+    </div>
+
+    <div id="eval-screen" class="overlay">
+        <div class="eval-paper" id="eval-paper"></div>
+        <div class="eval-btns" id="eval-btns"></div>
+    </div>
+    <script src="jalansentul.js?v=1"></script>
+</body>
+
+</html>

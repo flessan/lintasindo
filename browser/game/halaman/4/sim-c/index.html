@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LintasIndo - Kustomisasi SIM C</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700;800;900&family=Outfit:wght@400;600;800&family=Roboto+Mono:wght@700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="./sim.c.core.css">
+</head>
+
+<body>
+
+    <div id="orientation-warning">
+        <i class="fa-solid fa-mobile-screen-button"></i>
+        <h2>MAAF, HARUS HORIZONTAL!</h2>
+        <p>Silakan putar perangkat Anda ke posisi landscape agar kartu SIM terlihat sempurna.</p>
+    </div>
+
+    <button class="btn-pop btn-yellow how-to-btn" onclick="toggleModal(true)">
+        <i class="fa-solid fa-question-circle"></i> CARA PAKAI
+    </button>
+
+    <header>
+        <h1>Modif SIM-Mu!</h1>
+    </header>
+
+    <!-- How-To Modal -->
+    <div class="modal" id="howToModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="toggleModal(false)">&times;</span>
+            <div class="modal-header">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                CARA KUSTOMISASI
+            </div>
+            <div class="modal-body">
+                <ul>
+                    <li><i class="fa-solid fa-keyboard"></i> <strong>Edit Teks:</strong> Klik langsung pada nomor data
+                        (1-6) atau nomor SIM untuk mengetik.</li>
+                    <li><i class="fa-solid fa-camera"></i> <strong>Upload Foto:</strong> Klik pada area foto di kartu
+                        untuk mengganti dengan fotomu.</li>
+                    <li><i class="fa-solid fa-signature"></i> <strong>Tanda Tangan:</strong> Coretkan jarimu pada kotak
+                        di bawah foto utama.</li>
+                    <li><i class="fa-solid fa-id-card"></i> <strong>Ganti Golongan:</strong> Klik huruf "C" untuk
+                        mengganti jenis golongan SIM.</li>
+                    <li><i class="fa-solid fa-rotate"></i> <strong>Horizontal:</strong> Gunakan mode landscape agar
+                        tampilan kartu terlihat sempurna.</li>
+                </ul>
+            </div>
+            <button class="btn-pop btn-blue" onclick="toggleModal(false)"
+                style="width:100%; justify-content:center; margin-top:20px;">MENGERTI!</button>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="card-wrapper">
+            <div class="help-banner" style="margin-bottom: 15px;">
+                <i class="fa-solid fa-circle-info"></i> KLIK DATA KARTU UNTUK MENGUBAH!
+            </div>
+            <div class="sim-card" id="sim-card">
+                <div class="sim-header-main">
+                    <div class="sim-header-red">
+                        <img src="../../../gudang/logo/polri.png" class="sim-logo" alt="polri">
+                        <div class="sim-indonesia">INDONESIA</div>
+                        <div class="sim-dl-en">DRIVING LICENSE</div>
+                    </div>
+                    <div class="sim-header-silver">
+                        <div class="sim-title-label">SURAT IZIN MENGEMUDI</div>
+                    </div>
+                </div>
+
+                <div class="sim-class-no-container">
+                    <div class="sim-class-box" id="disp-class" title="Klik untuk ganti golongan">C</div>
+                    <div class="sim-number" id="disp-no" contenteditable="true">1005-0304-000388</div>
+                </div>
+
+                <div class="sim-content">
+                    <div class="sim-left">
+                        <div class="sim-photo-main" onclick="triggerUpload()" title="Klik untuk upload foto">
+                            <div class="sim-photo-hint" id="photo-hint">KLIK<br>FOTO</div>
+                            <img id="card-img" style="display:none" alt="Foto SIM">
+                        </div>
+                        <div class="sim-sig-box">
+                            <canvas class="sim-sig-canvas" id="sig-canvas"></canvas>
+                            <div class="sim-sig-text-hint" id="sig-hint">Tanda Tangan</div>
+                        </div>
+                    </div>
+
+                    <div class="sim-data-list">
+                        <div class="sim-data-item">
+                            <span class="sim-data-num">1.</span>
+                            <span class="sim-data-val" id="disp-nama" contenteditable="true">NAMA PEMAIN</span>
+                        </div>
+                        <div class="sim-data-item">
+                            <span class="sim-data-num">2.</span>
+                            <span class="sim-data-val" id="disp-ttl" contenteditable="true">BANJARMASIN,
+                                01-01-2000</span>
+                        </div>
+                        <div class="sim-data-item">
+                            <span class="sim-data-num">3.</span>
+                            <span class="sim-data-val clickable" id="disp-jk-goldar" onclick="toggleJKGoldar()"
+                                title="Klik untuk ganti">O - PRIA</span>
+                        </div>
+                        <div class="sim-data-item">
+                            <span class="sim-data-num">4.</span>
+                            <div style="flex:1">
+                                <div class="sim-data-val" id="disp-alamat-1" contenteditable="true">JL. MERDEKA NO. 1
+                                </div>
+                                <div class="sim-data-val" id="disp-alamat-2" contenteditable="true">KEL. ANTASARI</div>
+                                <div class="sim-data-val" id="disp-alamat-3" contenteditable="true">KOTA BANJARMASIN
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sim-data-item">
+                            <span class="sim-data-num">5.</span>
+                            <span class="sim-data-val" id="disp-pekerjaan"
+                                contenteditable="true">PELAJAR/MAHASISWA</span>
+                        </div>
+                        <div class="sim-data-item">
+                            <span class="sim-data-num">6.</span>
+                            <span class="sim-data-val" id="disp-provinsi" contenteditable="true">KALIMANTAN
+                                SELATAN</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sim-bottom-right">
+                    <div class="sim-photo-small">
+                        <img id="card-img-small" style="display:none" alt="Foto Kecil">
+                    </div>
+                    <div class="sim-expiry" id="disp-berlaku" contenteditable="true">00-00-0000</div>
+                </div>
+            </div>
+        </div> <!-- end card-wrapper -->
+
+        <div class="side-controls">
+            <div class="controls-area">
+                <input type="file" id="file-input" style="display:none" accept="image/*">
+                <button class="btn-pop btn-yellow" onclick="triggerUpload()">
+                    <i class="fas fa-camera"></i> UPLOAD FOTO
+                </button>
+                <button class="btn-pop btn-blue" onclick="clearSig()">
+                    <i class="fas fa-eraser"></i> HAPUS TTD
+                </button>
+                <button class="btn-pop btn-green" onclick="saveCard()">
+                    <i class="fas fa-save"></i> SIMPAN
+                </button>
+                <button class="btn-pop btn-dark" onclick="finishGame()">
+                    <i class="fas fa-flag-checkered"></i> SELESAI
+                </button>
+            </div>
+        </div> <!-- end side-controls -->
+    </div> <!-- end main-container -->
+
+    <div id="toast"><i class="fa-solid fa-check-circle"></i> SIM Berhasil Disimpan!</div>
+
+    <script>
+        /* ================================================
+           Ambil Nama dari URL
+           ================================================ */
+        const urlParams = new URLSearchParams(window.location.search);
+        const playerName = urlParams.get('tio') || 'WARGA NEGARA';
+
+        /* Isi nama ke kartu */
+        document.getElementById('disp-nama').textContent = playerName.toUpperCase();
+
+        /* ================================================
+           Inisialisasi Tanggal & Nomor SIM
+           ================================================ */
+        window.onload = () => {
+            initCanvas();
+
+            // Set Tanggal Berlaku (5 tahun dari sekarang)
+            const now = new Date();
+            const exp = new Date(now);
+            exp.setFullYear(exp.getFullYear() + 5);
+            document.getElementById('disp-berlaku').textContent = exp.toLocaleDateString('id-ID', {
+                day: '2-digit', month: '2-digit', year: 'numeric'
+            }).replace(/\//g, '-');
+
+            // Generate Nomor SIM Random
+            const rand = (n) => Math.floor(Math.random() * Math.pow(10, n)).toString().padStart(n, '0');
+            document.getElementById('disp-no').textContent = `${rand(4)}-${rand(4)}-${rand(6)}`;
+        };
+
+        /* ================================================
+           Logika Upload Foto
+           ================================================ */
+        function triggerUpload() { document.getElementById('file-input').click(); }
+
+        document.getElementById('file-input').addEventListener('change', function (e) {
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const imgMain = document.getElementById('card-img');
+                    const imgSmall = document.getElementById('card-img-small');
+                    imgMain.src = e.target.result;
+                    imgSmall.src = e.target.result;
+                    imgMain.style.display = 'block';
+                    imgSmall.style.display = 'block';
+                    document.getElementById('photo-hint').style.display = 'none';
+                };
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+
+        /* ================================================
+           Logika Toggle Data (Golongan Darah/JK & SIM)
+           ================================================ */
+        function toggleJKGoldar() {
+            const el = document.getElementById('disp-jk-goldar');
+            const states = ["O - PRIA", "O - WANITA", "A - PRIA", "A - WANITA", "B - PRIA", "B - WANITA", "AB - PRIA", "AB - WANITA"];
+            let current = states.indexOf(el.textContent);
+            el.textContent = states[(current + 1) % states.length];
+        }
+
+        function cycleClass() {
+            const el = document.getElementById('disp-class');
+            const classes = ["C", "A", "B1", "B2", "D"];
+            let current = classes.indexOf(el.textContent);
+            el.textContent = classes[(current + 1) % classes.length];
+        }
+        document.getElementById('disp-class').addEventListener('click', cycleClass);
+
+        /* ================================================
+           Logika Tanda Tangan (Canvas)
+           ================================================ */
+        const canvas = document.getElementById('sig-canvas');
+        const ctx = canvas.getContext('2d');
+        let isDrawing = false;
+
+        function initCanvas() {
+            const rect = canvas.parentNode.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+            ctx.strokeStyle = '#1e272e';
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+
+            const getPos = e => {
+                const r = canvas.getBoundingClientRect();
+                const cx = e.touches ? e.touches[0].clientX : e.clientX;
+                const cy = e.touches ? e.touches[0].clientY : e.clientY;
+                return { x: cx - r.left, y: cy - r.top };
+            };
+
+            const start = e => {
+                e.preventDefault(); isDrawing = true;
+                document.getElementById('sig-hint').style.display = 'none';
+                const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y);
+            };
+            const move = e => {
+                e.preventDefault(); if (!isDrawing) return;
+                const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke();
+            };
+            const stop = () => isDrawing = false;
+
+            canvas.addEventListener('mousedown', start);
+            canvas.addEventListener('mousemove', move);
+            window.addEventListener('mouseup', stop);
+            canvas.addEventListener('touchstart', start, { passive: false });
+            canvas.addEventListener('touchmove', move, { passive: false });
+            canvas.addEventListener('touchend', stop);
+        }
+
+        function clearSig() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            document.getElementById('sig-hint').style.display = 'block';
+        }
+
+        /* ================================================
+           Aksi Tombol Simpan & Akhiri
+           ================================================ */
+        /* ================================================
+           Logika Modal & Aksi Tombol
+           ================================================ */
+        function toggleModal(show) {
+            const modal = document.getElementById('howToModal');
+            modal.style.display = show ? 'flex' : 'none';
+        }
+
+        function saveCard() {
+            const t = document.getElementById('toast');
+            t.classList.add('show');
+            const card = document.getElementById('sim-card');
+            card.style.transform = 'scale(1.05)';
+
+            setTimeout(() => {
+                t.classList.remove('show');
+                card.style.transform = '';
+            }, 2000);
+        }
+
+        function finishGame() {
+            // Animasi kartu terbang pergi atau transisi hitam
+            const card = document.getElementById('sim-card');
+            card.style.transform = 'scale(0.8) rotateY(90deg)';
+            card.style.opacity = '0';
+
+            setTimeout(() => {
+                window.location.href = '../../../index.html'; // Kembali ke awal (root)
+            }, 1000);
+        }
+    </script>
+</body>
+
+</html>

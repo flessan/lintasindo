@@ -1,0 +1,1894 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+    <title>Teman Lalu Lintas — Quiz Rambu Indonesia Lengkap</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #E8F0FE;
+            --card: #fff;
+            --pri: #0D47A1;
+            --pri2: #1976D2;
+            --sec: #00BCD4;
+            --acc: #FF8F00;
+            --warn: #FF6D00;
+            --dng: #D32F2F;
+            --suc: #2E7D32;
+            --txt: #0D1B2A;
+            --brd: #0D1B2A;
+            --mut: #607D8B;
+            --sh: 4px 4px 0 var(--brd);
+            --sh2: 3px 3px 0 var(--brd);
+            --r: 12px;
+            --fd: 'Fredoka', sans-serif;
+            --fb: 'Nunito', sans-serif
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        body {
+            font-family: var(--fb);
+            background: var(--bg);
+            color: var(--txt);
+            min-height: 100dvh;
+            overflow: hidden;
+            position: relative
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: radial-gradient(circle, var(--brd) .8px, transparent .8px);
+            background-size: 24px 24px;
+            opacity: .035;
+            pointer-events: none;
+            z-index: 0
+        }
+
+        .blob {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: .08;
+            filter: blur(1px)
+        }
+
+        .blob:nth-child(1) {
+            width: 220px;
+            height: 220px;
+            background: var(--pri);
+            top: -40px;
+            left: -60px;
+            animation: bfloat 18s infinite ease-in-out
+        }
+
+        .blob:nth-child(2) {
+            width: 170px;
+            height: 170px;
+            background: var(--acc);
+            top: 45%;
+            right: -50px;
+            animation: bfloat 15s infinite ease-in-out -4s;
+            border-radius: 30%
+        }
+
+        .blob:nth-child(3) {
+            width: 120px;
+            height: 120px;
+            background: var(--sec);
+            bottom: 5%;
+            left: 10%;
+            animation: bfloat 20s infinite ease-in-out -8s
+        }
+
+        .blob:nth-child(4) {
+            width: 140px;
+            height: 140px;
+            background: var(--suc);
+            bottom: -40px;
+            right: 25%;
+            animation: bfloat 17s infinite ease-in-out -3s
+        }
+
+        @keyframes bfloat {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0) scale(1)
+            }
+
+            33% {
+                transform: translateY(-18px) rotate(3deg) scale(1.02)
+            }
+
+            66% {
+                transform: translateY(10px) rotate(-2deg) scale(.98)
+            }
+        }
+
+        #app {
+            position: relative;
+            width: 100%;
+            height: 100dvh;
+            z-index: 1;
+            overflow: hidden
+        }
+
+        .scr {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(.96) translateY(6px);
+            transition: opacity .28s, transform .28s;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 18px 14px;
+            scrollbar-width: thin
+        }
+
+        .scr.on {
+            opacity: 1;
+            pointer-events: auto;
+            transform: scale(1) translateY(0)
+        }
+
+        .nb {
+            font-family: var(--fd);
+            font-weight: 600;
+            border: 3px solid var(--brd);
+            border-radius: var(--r);
+            box-shadow: var(--sh);
+            cursor: pointer;
+            transition: transform .1s, box-shadow .1s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            text-decoration: none;
+            line-height: 1.2;
+            background: var(--card);
+            color: var(--txt);
+            font-size: inherit
+        }
+
+        .nb:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0 var(--brd)
+        }
+
+        .nb:active {
+            transform: translate(2px, 2px);
+            box-shadow: 0 0 0 var(--brd)
+        }
+
+        .nb-p {
+            background: var(--pri);
+            color: #fff
+        }
+
+        .nb-a {
+            background: var(--acc);
+            color: #fff
+        }
+
+        .nb-s {
+            background: var(--suc);
+            color: #fff
+        }
+
+        .nb-d {
+            background: var(--dng);
+            color: #fff
+        }
+
+        .nc {
+            background: var(--card);
+            border: 3px solid var(--brd);
+            border-radius: var(--r);
+            box-shadow: var(--sh);
+            padding: 18px
+        }
+
+        .mt {
+            font-family: var(--fd);
+            font-size: clamp(1.9rem, 7vw, 3rem);
+            font-weight: 700;
+            color: var(--pri);
+            text-align: center;
+            line-height: 1.12;
+            text-shadow: 3px 3px 0 var(--brd)
+        }
+
+        .ms {
+            font-size: clamp(.82rem, 2.4vw, 1rem);
+            color: var(--mut);
+            text-align: center;
+            font-weight: 700;
+            margin: 3px 0 18px
+        }
+
+        .mm {
+            width: 105px;
+            height: 105px;
+            margin-bottom: 10px;
+            animation: mbob 2s infinite ease-in-out
+        }
+
+        @keyframes mbob {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-9px);
+            }
+        }
+
+        .mbtn {
+            display: flex;
+            flex-direction: column;
+            gap: 11px;
+            width: 100%;
+            max-width: 290px
+        }
+
+        .mbtn .nb {
+            padding: 14px 20px;
+            font-size: 1.05rem;
+            border-radius: 14px
+        }
+
+        .st {
+            font-family: var(--fd);
+            font-size: clamp(1.15rem, 3.8vw, 1.5rem);
+            font-weight: 700;
+            color: var(--txt);
+            text-shadow: 2px 2px 0 var(--brd);
+            text-align: center
+        }
+
+        .lg {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            width: 100%;
+            max-width: 500px;
+            margin-top: 12px
+        }
+
+        .lc {
+            background: var(--card);
+            border: 3px solid var(--brd);
+            border-radius: var(--r);
+            box-shadow: var(--sh2);
+            padding: 12px 9px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform .1s, box-shadow .1s;
+            position: relative;
+            overflow: hidden
+        }
+
+        .lc:hover:not(.lk) {
+            transform: translate(-2px, -2px);
+            box-shadow: 5px 5px 0 var(--brd)
+        }
+
+        .lc:active:not(.lk) {
+            transform: translate(2px, 2px);
+            box-shadow: 0 0 0 var(--brd)
+        }
+
+        .lc.lk {
+            opacity: .4;
+            cursor: not-allowed
+        }
+
+        .lc.lk::after {
+            content: '\f023';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            color: var(--mut);
+            background: rgba(255, 255, 255, .5)
+        }
+
+        .lc .li {
+            font-size: 1.7rem;
+            margin-bottom: 5px
+        }
+
+        .lc .ln {
+            font-family: var(--fd);
+            font-weight: 700;
+            font-size: .82rem;
+            margin-bottom: 3px
+        }
+
+        .lc .lp {
+            font-size: .68rem;
+            color: var(--mut);
+            font-weight: 700;
+            margin-bottom: 2px
+        }
+
+        .lc .ls {
+            color: var(--acc);
+            font-size: .78rem
+        }
+
+        .lc .ls .e {
+            color: #CFD8DC
+        }
+
+        .lc.ch {
+            grid-column: 1/-1;
+            background: linear-gradient(135deg, var(--acc), var(--warn))
+        }
+
+        .lc.ch .ln {
+            color: #fff;
+            text-shadow: 1px 1px 0 var(--brd)
+        }
+
+        .lc.ch .lp {
+            color: rgba(255, 255, 255, .8)
+        }
+
+        .lc.ch .ls .e {
+            color: rgba(255, 255, 255, .3)
+        }
+
+        .qh {
+            width: 100%;
+            max-width: 520px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            gap: 5px;
+            flex-wrap: wrap
+        }
+
+        .qb {
+            background: var(--card);
+            border: 3px solid var(--brd);
+            border-radius: 9px;
+            box-shadow: var(--sh2);
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: .95rem;
+            color: var(--txt);
+            transition: transform .1s, box-shadow .1s
+        }
+
+        .qb:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 4px 4px 0 var(--brd)
+        }
+
+        .qb:active {
+            transform: translate(2px, 2px);
+            box-shadow: 0 0 0 var(--brd)
+        }
+
+        .qi {
+            display: flex;
+            gap: 8px;
+            align-items: center
+        }
+
+        .qii {
+            font-family: var(--fd);
+            font-weight: 700;
+            font-size: .78rem;
+            background: var(--card);
+            border: 2px solid var(--brd);
+            border-radius: 7px;
+            box-shadow: 2px 2px 0 var(--brd);
+            padding: 4px 9px;
+            display: flex;
+            align-items: center;
+            gap: 4px
+        }
+
+        .qii i {
+            font-size: .7rem
+        }
+
+        .qii .sk {
+            color: var(--warn)
+        }
+
+        .qpb {
+            width: 100%;
+            max-width: 520px;
+            height: 8px;
+            background: var(--bg);
+            border: 2px solid var(--brd);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 12px
+        }
+
+        .qpf {
+            height: 100%;
+            background: var(--pri);
+            border-radius: 2px;
+            transition: width .3s
+        }
+
+        .qtb {
+            width: 100%;
+            max-width: 520px;
+            height: 7px;
+            background: var(--bg);
+            border: 2px solid var(--brd);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 12px;
+            display: none
+        }
+
+        .qtf {
+            height: 100%;
+            background: var(--suc);
+            border-radius: 2px;
+            transition: width .1s linear, background .3s
+        }
+
+        .qsa {
+            width: 100%;
+            max-width: 520px;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 8px;
+            min-height: 120px;
+            align-items: center
+        }
+
+        .qsa img {
+            max-width: clamp(110px, 30vw, 160px);
+            max-height: clamp(110px, 30vw, 160px);
+            object-fit: contain;
+            filter: drop-shadow(3px 3px 0 var(--brd));
+            border-radius: 6px
+        }
+
+        .qsa .qsi {
+            font-size: clamp(2.8rem, 9vw, 4.5rem);
+            filter: drop-shadow(3px 3px 0 var(--brd))
+        }
+
+        .sf {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--fd);
+            font-weight: 700;
+            font-size: .85rem;
+            text-align: center;
+            padding: 8px;
+            line-height: 1.2;
+            border-radius: 8px;
+            border: 3px solid var(--brd);
+            color: var(--txt)
+        }
+
+        .qq {
+            font-family: var(--fd);
+            font-size: clamp(.92rem, 3vw, 1.15rem);
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 16px;
+            max-width: 480px;
+            line-height: 1.4
+        }
+
+        .qo {
+            width: 100%;
+            max-width: 520px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 12px
+        }
+
+        .ob {
+            width: 100%;
+            background: var(--card);
+            border: 3px solid var(--brd);
+            border-radius: 9px;
+            box-shadow: var(--sh2);
+            padding: 12px 14px;
+            font-family: var(--fb);
+            font-size: clamp(.8rem, 2.5vw, .92rem);
+            font-weight: 700;
+            color: var(--txt);
+            text-align: left;
+            cursor: pointer;
+            transition: transform .1s, box-shadow .1s, background .15s, color .15s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            line-height: 1.3
+        }
+
+        .ob:hover:not(.dis) {
+            transform: translate(-2px, -2px);
+            box-shadow: 5px 5px 0 var(--brd)
+        }
+
+        .ob:active:not(.dis) {
+            transform: translate(2px, 2px);
+            box-shadow: 0 0 0 var(--brd)
+        }
+
+        .ob .ol {
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            border: 2px solid var(--brd);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--fd);
+            font-weight: 700;
+            font-size: .75rem;
+            background: var(--bg)
+        }
+
+        .ob.ok {
+            background: var(--suc) !important;
+            color: #fff !important
+        }
+
+        .ob.ok .ol {
+            background: rgba(255, 255, 255, .25);
+            color: #fff;
+            border-color: rgba(255, 255, 255, .4)
+        }
+
+        .ob.no {
+            background: var(--dng) !important;
+            color: #fff !important;
+            animation: shk .4s
+        }
+
+        .ob.no .ol {
+            background: rgba(255, 255, 255, .25);
+            color: #fff;
+            border-color: rgba(255, 255, 255, .4)
+        }
+
+        .ob.dis {
+            pointer-events: none;
+            opacity: .5
+        }
+
+        .ob.dis.ok {
+            opacity: 1
+        }
+
+        @keyframes shk {
+
+            0%,
+            100% {
+                transform: translateX(0)
+            }
+
+            20% {
+                transform: translateX(-6px)
+            }
+
+            40% {
+                transform: translateX(6px)
+            }
+
+            60% {
+                transform: translateX(-3px)
+            }
+
+            80% {
+                transform: translateX(3px)
+            }
+        }
+
+        .qe {
+            width: 100%;
+            max-width: 520px;
+            background: #FFF8E1;
+            border: 3px solid var(--brd);
+            border-radius: 9px;
+            box-shadow: var(--sh2);
+            padding: 12px 14px;
+            font-size: .84rem;
+            font-weight: 700;
+            line-height: 1.5;
+            display: none;
+            align-items: flex-start;
+            gap: 8px
+        }
+
+        .qe.v {
+            display: flex
+        }
+
+        .qe i {
+            color: var(--acc);
+            font-size: .95rem;
+            margin-top: 2px;
+            flex-shrink: 0
+        }
+
+        .qnb {
+            display: none;
+            margin-top: 2px
+        }
+
+        .qnb.v {
+            display: inline-flex
+        }
+
+        .qmc {
+            width: 60px;
+            height: 60px;
+            margin-top: 2px
+        }
+
+        .sp {
+            position: fixed;
+            font-family: var(--fd);
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: var(--suc);
+            pointer-events: none;
+            z-index: 100;
+            animation: fup .8s ease forwards;
+            text-shadow: 2px 2px 0 var(--brd)
+        }
+
+        @keyframes fup {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateY(-55px) scale(1.2);
+            }
+        }
+
+        .rs {
+            font-family: var(--fd);
+            font-size: clamp(2.2rem, 9vw, 3.5rem);
+            font-weight: 700;
+            color: var(--pri);
+            text-shadow: 3px 3px 0 var(--brd);
+            margin: 5px 0
+        }
+
+        .rst {
+            font-size: 2.2rem;
+            margin: 8px 0
+        }
+
+        .rst .st {
+            color: #CFD8DC;
+            display: inline-block;
+            transition: color .3s, transform .3s
+        }
+
+        .rst .st.ed {
+            color: var(--acc);
+            animation: spop .4s ease backwards
+        }
+
+        .rst .st:nth-child(2).ed {
+            animation-delay: .2s
+        }
+
+        .rst .st:nth-child(3).ed {
+            animation-delay: .4s
+        }
+
+        @keyframes spop {
+            0% {
+                transform: scale(0) rotate(-20deg);
+                opacity: 0;
+            }
+
+            60% {
+                transform: scale(1.3) rotate(6deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1) rotate(0);
+                opacity: 1;
+            }
+        }
+
+        .rl {
+            font-weight: 800;
+            color: var(--mut);
+            font-size: .88rem
+        }
+
+        .rbtn {
+            display: flex;
+            gap: 9px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+            justify-content: center
+        }
+
+        .rbtn .nb {
+            padding: 12px 20px;
+            font-size: .92rem
+        }
+
+        .gtabs {
+            display: flex;
+            gap: 5px;
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 12px;
+            overflow-x: auto;
+            padding-bottom: 3px;
+            scrollbar-width: none
+        }
+
+        .gtabs::-webkit-scrollbar {
+            display: none
+        }
+
+        .gtab {
+            flex-shrink: 0;
+            padding: 7px 14px;
+            border: 2px solid var(--brd);
+            border-radius: 7px;
+            box-shadow: var(--sh2);
+            font-family: var(--fd);
+            font-weight: 700;
+            font-size: .75rem;
+            background: var(--card);
+            cursor: pointer;
+            transition: transform .1s, background .15s;
+            white-space: nowrap;
+            color: var(--txt)
+        }
+
+        .gtab:hover {
+            transform: translate(-1px, -1px)
+        }
+
+        .gtab:active {
+            transform: translate(1px, 1px);
+            box-shadow: 0 0 0 var(--brd)
+        }
+
+        .gtab.on {
+            background: var(--pri);
+            color: #fff
+        }
+
+        .ggrid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 9px;
+            width: 100%;
+            max-width: 600px;
+            padding-bottom: 30px
+        }
+
+        .gc {
+            background: var(--card);
+            border: 3px solid var(--brd);
+            border-radius: var(--r);
+            box-shadow: var(--sh2);
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform .1s, box-shadow .1s
+        }
+
+        .gc:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 5px 5px 0 var(--brd)
+        }
+
+        .gc:active {
+            transform: translate(2px, 2px);
+            box-shadow: 0 0 0 var(--brd)
+        }
+
+        .gc-img {
+            width: 100%;
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f5f6f8;
+            overflow: hidden;
+            padding: 6px
+        }
+
+        .gc-img img {
+            width: 82%;
+            height: 82%;
+            object-fit: contain
+        }
+
+        .gc-info {
+            padding: 7px 8px;
+            text-align: center
+        }
+
+        .gc-info .gn {
+            font-family: var(--fd);
+            font-weight: 700;
+            font-size: .68rem;
+            line-height: 1.25;
+            margin-bottom: 1px
+        }
+
+        .gc-info .gcode {
+            font-size: .62rem;
+            color: var(--mut);
+            font-weight: 700
+        }
+
+        .gmod {
+            position: fixed;
+            inset: 0;
+            background: rgba(13, 27, 42, .55);
+            z-index: 200;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 18px
+        }
+
+        .gmod.v {
+            display: flex
+        }
+
+        .gmod-box {
+            background: var(--card);
+            border: 3px solid var(--brd);
+            border-radius: var(--r);
+            box-shadow: 8px 8px 0 var(--brd);
+            padding: 22px;
+            max-width: 400px;
+            width: 100%;
+            max-height: 85dvh;
+            overflow-y: auto;
+            position: relative
+        }
+
+        .gmod-x {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 34px;
+            height: 34px;
+            border: 2px solid var(--brd);
+            border-radius: 7px;
+            box-shadow: 2px 2px 0 var(--brd);
+            background: var(--card);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .95rem;
+            transition: transform .1s
+        }
+
+        .gmod-x:hover {
+            transform: translate(-1px, -1px)
+        }
+
+        .gmod-x:active {
+            transform: translate(1px, 1px);
+            box-shadow: 0 0 0 var(--brd)
+        }
+
+        .gmod-img {
+            width: 150px;
+            height: 150px;
+            margin: 8px auto 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f5f6f8;
+            border: 3px solid var(--brd);
+            border-radius: 10px;
+            overflow: hidden;
+            padding: 8px
+        }
+
+        .gmod-img img {
+            width: 85%;
+            height: 85%;
+            object-fit: contain
+        }
+
+        .gmod-badge {
+            display: inline-block;
+            padding: 3px 11px;
+            border: 2px solid var(--brd);
+            border-radius: 5px;
+            font-family: var(--fd);
+            font-weight: 700;
+            font-size: .72rem;
+            margin-bottom: 7px
+        }
+
+        .gmod-name {
+            font-family: var(--fd);
+            font-weight: 700;
+            font-size: 1.15rem;
+            margin-bottom: 3px
+        }
+
+        .gmod-code {
+            font-size: .82rem;
+            color: var(--mut);
+            font-weight: 700;
+            margin-bottom: 10px
+        }
+
+        .gmod-desc {
+            font-size: .85rem;
+            font-weight: 700;
+            line-height: 1.6;
+            color: var(--txt);
+            background: #F5F5F5;
+            border: 2px solid var(--brd);
+            border-radius: 7px;
+            padding: 11px 13px
+        }
+
+        .lbl {
+            width: 100%;
+            max-width: 470px;
+            margin-top: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px
+        }
+
+        .lbi {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            background: var(--card);
+            border: 2px solid var(--brd);
+            border-radius: 9px;
+            box-shadow: var(--sh2);
+            padding: 10px 12px;
+            font-weight: 700;
+            font-size: .82rem
+        }
+
+        .lbr {
+            width: 28px;
+            height: 28px;
+            border: 2px solid var(--brd);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--fd);
+            font-weight: 700;
+            background: var(--bg);
+            flex-shrink: 0;
+            font-size: .75rem
+        }
+
+        .lbr.g {
+            background: var(--acc);
+            color: var(--txt)
+        }
+
+        .lbr.sv {
+            background: #B0BEC5;
+            color: var(--txt)
+        }
+
+        .lbr.bz {
+            background: #FF8A65;
+            color: #fff
+        }
+
+        .lbnfo {
+            flex: 1
+        }
+
+        .lbnfo div {
+            font-size: .72rem;
+            color: var(--mut)
+        }
+
+        .lbsc {
+            font-family: var(--fd);
+            font-weight: 700;
+            color: var(--pri)
+        }
+
+        .lbe {
+            text-align: center;
+            color: var(--mut);
+            font-weight: 700;
+            padding: 36px 0;
+            font-size: .88rem
+        }
+
+        .sls {
+            width: 100%;
+            max-width: 390px;
+            margin-top: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px
+        }
+
+        .sli {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--card);
+            border: 3px solid var(--brd);
+            border-radius: 9px;
+            box-shadow: var(--sh2);
+            padding: 12px 14px;
+            font-weight: 700;
+            font-size: .85rem
+        }
+
+        .tg {
+            width: 48px;
+            height: 25px;
+            border: 3px solid var(--brd);
+            border-radius: 12px;
+            background: #CFD8DC;
+            cursor: pointer;
+            position: relative;
+            transition: background .2s;
+            flex-shrink: 0
+        }
+
+        .tg.on {
+            background: var(--suc)
+        }
+
+        .tg::after {
+            content: '';
+            position: absolute;
+            width: 17px;
+            height: 17px;
+            border-radius: 50%;
+            background: #fff;
+            border: 2px solid var(--brd);
+            top: 1px;
+            left: 1px;
+            transition: left .2s
+        }
+
+        .tg.on::after {
+            left: 23px
+        }
+
+        .mov {
+            position: fixed;
+            inset: 0;
+            background: rgba(13, 27, 42, .5);
+            z-index: 200;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 18px
+        }
+
+        .mov.v {
+            display: flex
+        }
+
+        .mob {
+            background: var(--card);
+            border: 3px solid var(--brd);
+            border-radius: var(--r);
+            box-shadow: 8px 8px 0 var(--brd);
+            padding: 24px 20px;
+            max-width: 340px;
+            width: 100%;
+            text-align: center
+        }
+
+        .mob p {
+            font-weight: 700;
+            font-size: .92rem;
+            margin-bottom: 16px;
+            line-height: 1.5
+        }
+
+        .mobs {
+            display: flex;
+            gap: 9px;
+            justify-content: center
+        }
+
+        .mobs .nb {
+            padding: 9px 18px;
+            font-size: .88rem
+        }
+
+        #cc {
+            position: fixed;
+            inset: 0;
+            z-index: 150;
+            pointer-events: none
+        }
+
+        .tst {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(85px);
+            background: var(--txt);
+            color: #fff;
+            font-family: var(--fd);
+            font-weight: 700;
+            font-size: .85rem;
+            padding: 10px 20px;
+            border-radius: 9px;
+            z-index: 300;
+            transition: transform .3s;
+            white-space: nowrap
+        }
+
+        .tst.v {
+            transform: translateX(-50%) translateY(0)
+        }
+
+        .stat-row {
+            display: flex;
+            gap: 8px;
+            width: 100%;
+            max-width: 520px;
+            margin-bottom: 8px
+        }
+
+        .stat-chip {
+            flex: 1;
+            background: var(--card);
+            border: 2px solid var(--brd);
+            border-radius: 8px;
+            box-shadow: var(--sh2);
+            padding: 8px;
+            text-align: center;
+            font-size: .72rem;
+            font-weight: 700
+        }
+
+        .stat-chip .sv {
+            font-family: var(--fd);
+            font-size: 1rem;
+            color: var(--pri)
+        }
+
+        @media(min-width:600px) {
+            .lg {
+                grid-template-columns: repeat(4, 1fr)
+            }
+
+            .lc.ch {
+                grid-column: 1/-1
+            }
+
+            .ggrid {
+                grid-template-columns: repeat(4, 1fr)
+            }
+        }
+
+        @media(max-width:380px) {
+            .ob {
+                padding: 9px 11px;
+                font-size: .78rem
+            }
+
+            .ob .ol {
+                width: 24px;
+                height: 24px;
+                font-size: .7rem
+            }
+
+            .qii {
+                padding: 3px 6px;
+                font-size: .72rem
+            }
+
+            .ggrid {
+                grid-template-columns: repeat(2, 1fr)
+            }
+        }
+
+        @media(prefers-reduced-motion:reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: .01ms !important;
+                transition-duration: .01ms !important
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="blob"></div>
+    <div class="blob"></div>
+    <div class="blob"></div>
+    <div class="blob"></div>
+    <canvas id="cc"></canvas>
+
+    <div class="mov" id="cmod">
+        <div class="mob">
+            <p id="cmtxt"></p>
+            <div class="mobs"><button class="nb" onclick="ccls()">Batal</button><button class="nb nb-d"
+                    id="cmcfm">Ya</button></div>
+        </div>
+    </div>
+    <div class="gmod" id="gmod">
+        <div class="gmod-box">
+            <div class="gmod-x" onclick="gmodCls()"><i class="fa-solid fa-xmark"></i></div>
+            <div class="gmod-img" id="gm-img"></div>
+            <div class="gmod-badge" id="gm-badge"></div>
+            <div class="gmod-name" id="gm-name"></div>
+            <div class="gmod-code" id="gm-code"></div>
+            <div class="gmod-desc" id="gm-desc"></div>
+        </div>
+    </div>
+    <div class="tst" id="tst"></div>
+
+    <div id="app">
+        <!-- MENU -->
+        <div class="scr on" id="s-menu">
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center">
+                <div class="mm" id="mmasc"></div>
+                <h1 class="mt">Teman<br>Lalu Lintas</h1>
+                <p class="ms">Belajar Rambu Indonesia dengan Menyenangkan</p>
+                <div class="mbtn">
+                    <button class="nb nb-p" onclick="doStart()"><i class="fa-solid fa-play"></i> Mulai Bermain</button>
+                    <button class="nb nb-a" onclick="nav('s-lvl');renderLvl()"><i class="fa-solid fa-map"></i> Pilih
+                        Level</button>
+                    <button class="nb" onclick="nav('s-gal');renderGal()"><i class="fa-solid fa-images"></i> Galeri
+                        Rambu</button>
+                    <button class="nb" onclick="nav('s-lb');renderLB()"><i class="fa-solid fa-trophy"></i> Papan
+                        Skor</button>
+                    <button class="nb" onclick="nav('s-set');renderSet()"><i class="fa-solid fa-gear"></i>
+                        Pengaturan</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- LEVEL SELECT -->
+        <div class="scr" id="s-lvl">
+            <div style="width:100%;max-width:520px">
+                <div style="display:flex;align-items:center;gap:9px;margin-bottom:4px">
+                    <div class="qb" onclick="nav('s-menu')"><i class="fa-solid fa-arrow-left"></i></div>
+                    <h2 class="st" style="margin:0">Pilih Level</h2>
+                </div>
+                <div class="lg" id="lvlg"></div>
+            </div>
+        </div>
+
+        <!-- QUIZ -->
+        <div class="scr" id="s-quiz">
+            <div class="qh">
+                <div class="qb" onclick="cfmQuit()"><i class="fa-solid fa-arrow-left"></i></div>
+                <div class="qi">
+                    <div class="qii" id="qip"><i class="fa-solid fa-list-ol"></i><span>1/6</span></div>
+                    <div class="qii" id="qis"><i class="fa-solid fa-star"></i><span>0</span></div>
+                    <div class="qii" id="qik" style="display:none"><span class="sk"><i class="fa-solid fa-fire"></i>
+                            x2</span></div>
+                </div>
+            </div>
+            <div class="qpb">
+                <div class="qpf" id="qpf"></div>
+            </div>
+            <div class="qtb" id="qtb">
+                <div class="qtf" id="qtf"></div>
+            </div>
+            <div class="stat-row" id="qstat">
+                <div class="stat-chip">
+                    <div>Benar</div>
+                    <div class="sv" id="qs-ok">0</div>
+                </div>
+                <div class="stat-chip">
+                    <div>Salah</div>
+                    <div class="sv" id="qs-no" style="color:var(--dng)">0</div>
+                </div>
+                <div class="stat-chip">
+                    <div>Streak</div>
+                    <div class="sv" id="qs-sk" style="color:var(--warn)">0</div>
+                </div>
+            </div>
+            <div class="qsa" id="qsa"></div>
+            <div class="qq" id="qqt"></div>
+            <div class="qo" id="qop"></div>
+            <div class="qe" id="qex"><i class="fa-solid fa-lightbulb"></i><span></span></div>
+            <button class="nb nb-p qnb" id="qnxt" onclick="nxtQ()">Lanjut <i
+                    class="fa-solid fa-arrow-right"></i></button>
+            <div class="qmc" id="qmasc"></div>
+        </div>
+
+        <!-- RESULT -->
+        <div class="scr" id="s-res">
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center">
+                <div id="rmasc" style="width:100px;height:100px;margin-bottom:5px"></div>
+                <p class="rl" id="rlab">Level Selesai</p>
+                <div class="rs" id="rsc">0</div>
+                <p class="rl" style="margin-top:-2px">Poin</p>
+                <div class="rst" id="rsts"><span class="st"><i class="fa-solid fa-star"></i></span><span class="st"><i
+                            class="fa-solid fa-star"></i></span><span class="st"><i class="fa-solid fa-star"></i></span>
+                </div>
+                <p class="rl" id="rdet" style="font-size:.82rem"></p>
+                <div class="rbtn">
+                    <button class="nb nb-a" onclick="replay()"><i class="fa-solid fa-rotate-right"></i> Ulangi</button>
+                    <button class="nb" onclick="nav('s-lvl');renderLvl()"><i class="fa-solid fa-map"></i> Pilih
+                        Level</button>
+                    <button class="nb nb-p" onclick="nav('s-menu')"><i class="fa-solid fa-house"></i> Menu</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- GALERI -->
+        <div class="scr" id="s-gal">
+            <div style="width:100%;max-width:600px">
+                <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px">
+                    <div class="qb" onclick="nav('s-menu')"><i class="fa-solid fa-arrow-left"></i></div>
+                    <h2 class="st" style="margin:0">Galeri Rambu Indonesia</h2>
+                </div>
+                <div class="gtabs" id="gtabs"></div>
+                <div class="ggrid" id="ggrid"></div>
+            </div>
+        </div>
+
+        <!-- LEADERBOARD -->
+        <div class="scr" id="s-lb">
+            <div style="width:100%;max-width:470px">
+                <div style="display:flex;align-items:center;gap:9px;margin-bottom:4px">
+                    <div class="qb" onclick="nav('s-menu')"><i class="fa-solid fa-arrow-left"></i></div>
+                    <h2 class="st" style="margin:0">Papan Skor</h2>
+                </div>
+                <div class="lbl" id="lblr"></div>
+            </div>
+        </div>
+
+        <!-- SETTINGS -->
+        <div class="scr" id="s-set">
+            <div style="width:100%;max-width:390px">
+                <div style="display:flex;align-items:center;gap:9px;margin-bottom:4px">
+                    <div class="qb" onclick="nav('s-menu')"><i class="fa-solid fa-arrow-left"></i></div>
+                    <h2 class="st" style="margin:0">Pengaturan</h2>
+                </div>
+                <div class="sls" id="slsl"></div>
+                <div style="margin-top:16px;text-align:center"><button class="nb nb-d" onclick="cfmReset()"
+                        style="font-size:.82rem;padding:10px 20px"><i class="fa-solid fa-trash"></i> Hapus Semua
+                        Progres</button></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== AUDIO ====================
+        const AU = { ctx: null, snd: true, mus: false, init() { if (this.ctx) return; this.ctx = new (window.AudioContext || window.webkitAudioContext)() }, tone(f, t, d, type = 'sine', v = .18) { if (!this.snd || !this.ctx) return; const o = this.ctx.createOscillator(), g = this.ctx.createGain(); o.type = type; o.frequency.value = f; g.gain.setValueAtTime(v, t); g.gain.exponentialRampToValueAtTime(.001, t + d); o.connect(g).connect(this.ctx.destination); o.start(t); o.stop(t + d + .05) }, ok() { const t = this.ctx.currentTime;[523.25, 659.25, 783.99].forEach((f, i) => this.tone(f, t + i * .1, .28)) }, no() { const t = this.ctx.currentTime;[329.63, 261.63, 196].forEach((f, i) => this.tone(f, t + i * .12, .32, 'triangle', .15)) }, clk() { if (!this.snd || !this.ctx) return; const t = this.ctx.currentTime; const o = this.ctx.createOscillator(), g = this.ctx.createGain(); o.type = 'sine'; o.frequency.setValueAtTime(880, t); o.frequency.exponentialRampToValueAtTime(550, t + .04); g.gain.setValueAtTime(.08, t); g.gain.exponentialRampToValueAtTime(.001, t + .06); o.connect(g).connect(this.ctx.destination); o.start(t); o.stop(t + .07) }, win() { const t = this.ctx.currentTime;[523.25, 587.33, 659.25, 783.99, 1046.5].forEach((f, i) => this.tone(f, t + i * .12, .38)) }, startMus() { }, stopMus() { } };
+
+        // ==================== CONFETTI ====================
+        const CF = { cv: null, cx: null, ps: [], run: false, init() { this.cv = document.getElementById('cc'); this.cx = this.cv.getContext('2d'); this.rsz(); window.addEventListener('resize', () => this.rsz()) }, rsz() { this.cv.width = innerWidth; this.cv.height = innerHeight }, burst(x, y, n = 50) { const cs = ['#D32F2F', '#FF8F00', '#2E7D32', '#0D47A1', '#00BCD4', '#FF6D00', '#E040FB', '#FFD600']; for (let i = 0; i < n; i++) { const a = Math.PI * 2 * i / n + (Math.random() - .5) * .5, sp = 3.5 + Math.random() * 7; this.ps.push({ x, y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 2.5, sz: 3.5 + Math.random() * 5.5, c: cs[Math.random() * cs.length | 0], r: Math.random() * 360, rs: (Math.random() - .5) * 11, l: 1, d: .012 + Math.random() * .014, sh: Math.random() > .5 ? 'r' : 'c' }) } if (!this.run) this.anim() }, anim() { this.run = true; this.cx.clearRect(0, 0, this.cv.width, this.cv.height); this.ps = this.ps.filter(p => { p.x += p.vx; p.y += p.vy; p.vy += .22; p.vx *= .99; p.r += p.rs; p.l -= p.d; if (p.l <= 0) return false; this.cx.save(); this.cx.translate(p.x, p.y); this.cx.rotate(p.r * Math.PI / 180); this.cx.globalAlpha = Math.min(1, p.l * 2); this.cx.fillStyle = p.c; if (p.sh === 'r') this.cx.fillRect(-p.sz / 2, -p.sz / 2, p.sz, p.sz * .55); else { this.cx.beginPath(); this.cx.arc(0, 0, Math.max(1, p.sz / 2), 0, Math.PI * 2); this.cx.fill() } this.cx.restore(); return true }); if (this.ps.length > 0) requestAnimationFrame(() => this.anim()); else { this.run = false; this.cx.clearRect(0, 0, this.cv.width, this.cv.height) } } };
+
+        // ==================== MASCOT ====================
+        function mascot(st = 'happy', sz = 100) {
+            const c = sz / 2, r = sz * .4;
+            const E = {
+                happy: { eL: `<circle cx="${c - r * .32}" cy="${c - r * .1}" r="${r * .12}" fill="#0D1B2A"/><circle cx="${c - r * .3}" cy="${c - r * .14}" r="${r * .04}" fill="#fff"/>`, eR: `<circle cx="${c + r * .32}" cy="${c - r * .1}" r="${r * .12}" fill="#0D1B2A"/><circle cx="${c + r * .34}" cy="${c - r * .14}" r="${r * .04}" fill="#fff"/>`, m: `<path d="M${c - r * .26} ${c + r * .22} Q${c} ${c + r * .48} ${c + r * .26} ${c + r * .22}" fill="none" stroke="#0D1B2A" stroke-width="${r * .08}" stroke-linecap="round"/>`, ch: `<circle cx="${c - r * .5}" cy="${c + r * .1}" r="${r * .09}" fill="#FF8A80" opacity=".5"/><circle cx="${c + r * .5}" cy="${c + r * .1}" r="${r * .09}" fill="#FF8A80" opacity=".5"/>`, bc: '#0D47A1' },
+                sad: { eL: `<ellipse cx="${c - r * .32}" cy="${c - r * .06}" rx="${r * .1}" ry="${r * .12}" fill="#0D1B2A"/><ellipse cx="${c - r * .3}" cy="${c - r * .16}" rx="${r * .05}" ry="${r * .035}" fill="#64B5F6"/>`, eR: `<ellipse cx="${c + r * .32}" cy="${c - r * .06}" rx="${r * .1}" ry="${r * .12}" fill="#0D1B2A"/><ellipse cx="${c + r * .34}" cy="${c - r * .16}" rx="${r * .05}" ry="${r * .035}" fill="#64B5F6"/>`, m: `<path d="M${c - r * .18} ${c + r * .38} Q${c} ${c + r * .2} ${c + r * .18} ${c + r * .38}" fill="none" stroke="#0D1B2A" stroke-width="${r * .08}" stroke-linecap="round"/>`, ch: `<circle cx="${c - r * .5}" cy="${c + r * .18}" r="${r * .07}" fill="#64B5F6" opacity=".4"/><circle cx="${c + r * .5}" cy="${c + r * .18}" r="${r * .07}" fill="#64B5F6" opacity=".4"/>`, bc: '#1976D2' },
+                think: { eL: `<ellipse cx="${c - r * .32}" cy="${c - r * .08}" rx="${r * .11}" ry="${r * .13}" fill="#0D1B2A"/><circle cx="${c - r * .3}" cy="${c - r * .12}" r="${r * .04}" fill="#fff"/>`, eR: `<ellipse cx="${c + r * .32}" cy="${c - r * .08}" rx="${r * .11}" ry="${r * .13}" fill="#0D1B2A"/><circle cx="${c + r * .34}" cy="${c - r * .12}" r="${r * .04}" fill="#fff"/>`, m: `<path d="M${c - r * .12} ${c + r * .3} Q${c} ${c + r * .26} ${c + r * .12} ${c + r * .3}" fill="none" stroke="#0D1B2A" stroke-width="${r * .06}" stroke-linecap="round"/>`, ch: '', bc: '#0D47A1' },
+                exc: { eL: `<text x="${c - r * .36}" y="${c}" font-family="sans-serif" font-weight="900" font-size="${r * .26}" fill="#0D1B2A" text-anchor="middle">\u2605</text>`, eR: `<text x="${c + r * .36}" y="${c}" font-family="sans-serif" font-weight="900" font-size="${r * .26}" fill="#0D1B2A" text-anchor="middle">\u2605</text>`, m: `<path d="M${c - r * .28} ${c + r * .16} Q${c} ${c + r * .52} ${c + r * .28} ${c + r * .16}" fill="#FF8A80" stroke="#0D1B2A" stroke-width="${r * .05}" stroke-linecap="round"/>`, ch: `<circle cx="${c - r * .52}" cy="${c + r * .1}" r="${r * .11}" fill="#FF8A80" opacity=".5"/><circle cx="${c + r * .52}" cy="${c + r * .1}" r="${r * .11}" fill="#FF8A80" opacity=".5"/>`, bc: '#2E7D32' }
+            }; const e = E[st] || E.happy;
+            return `<svg viewBox="0 0 ${sz} ${sz}" xmlns="http://www.w3.org/2000/svg"><circle cx="${c}" cy="${c}" r="${r}" fill="${e.bc}" stroke="#0D1B2A" stroke-width="${sz * .028}"/><circle cx="${c}" cy="${c - r * .44}" r="${r * .14}" fill="#FF8F00" stroke="#0D1B2A" stroke-width="${sz * .018}"/><circle cx="${c}" cy="${c - r * .44}" r="${r * .07}" fill="#FF6D00"/>${e.eL}${e.eR}${e.m}${e.ch}</svg>`
+        }
+
+        // ==================== PATH GAMBAR LOKAL ====================
+        function img(cat, code) { return `./gudang/rambu-${cat}/${code}.png` }
+
+        // ==================== FALLBACK RAMBU (jika gambar tidak ada) ====================
+        function signFB(cat, code) {
+            const s = 90, c = s / 2, r = s * .38;
+            if (cat === 'peringatan') {
+                const pts = `${c},${s * .06} ${s * .94},${c} ${c},${s * .94} ${s * .06},${c}`;
+                return `<svg viewBox="0 0 ${s} ${s}" xmlns="http://www.w3.org/2000/svg"><polygon points="${pts}" fill="#FFD600" stroke="#D32F2F" stroke-width="4"/><text x="${c}" y="${c + 2}" text-anchor="middle" dy=".35em" font-family="Fredoka,sans-serif" font-weight="700" font-size="13" fill="#0D1B2A">${code}</text></svg>`
+            }
+            if (cat === 'larangan') {
+                return `<svg viewBox="0 0 ${s} ${s}" xmlns="http://www.w3.org/2000/svg"><circle cx="${c}" cy="${c}" r="${r}" fill="#fff" stroke="#D32F2F" stroke-width="5"/><line x1="${c - r * .7}" y1="${c + r * .7}" x2="${c + r * .7}" y2="${c - r * .7}" stroke="#D32F2F" stroke-width="4" stroke-linecap="round"/><text x="${c}" y="${c + 2}" text-anchor="middle" dy=".35em" font-family="Fredoka,sans-serif" font-weight="700" font-size="11" fill="#0D1B2A">${code}</text></svg>`
+            }
+            if (cat === 'perintah') {
+                return `<svg viewBox="0 0 ${s} ${s}" xmlns="http://www.w3.org/2000/svg"><circle cx="${c}" cy="${c}" r="${r}" fill="#1565C0" stroke="#0D1B2A" stroke-width="4"/><text x="${c}" y="${c + 2}" text-anchor="middle" dy=".35em" font-family="Fredoka,sans-serif" font-weight="700" font-size="11" fill="#fff">${code}</text></svg>`
+            }
+            return `<svg viewBox="0 0 ${s} ${s}" xmlns="http://www.w3.org/2000/svg"><rect x="${s * .08}" y="${s * .08}" width="${s * .84}" height="${s * .84}" rx="4" fill="#1565C0" stroke="#0D1B2A" stroke-width="4"/><text x="${c}" y="${c + 2}" text-anchor="middle" dy=".35em" font-family="Fredoka,sans-serif" font-weight="700" font-size="11" fill="#fff">${code}</text></svg>`
+        }
+
+        function imgErr(imgEl, cat, code) {
+            imgEl.onerror = null; imgEl.style.display = 'none';
+            const d = document.createElement('div'); d.className = 'sf';
+            d.style.cssText = 'width:85%;height:85%';
+            d.innerHTML = signFB(cat, code);
+            imgEl.parentNode.appendChild(d);
+        }
+
+        // ==================== DATABASE QUIZ LENGKAP ====================
+        const QS = {
+            peringatan: [
+                { img: img('peringatan', '1a'), cat: 'peringatan', code: '1A', q: 'Apa arti rambu ini?', o: ['Jalan menikung ke kiri', 'Tikungan tajam ke kanan', 'Persimpangan jalan', 'Jalan menanjak'], c: 1, e: 'Rambu peringatan tikungan tajam ke kanan. Kurangi kecepatan dan waspada kendaraan dari arah berlawanan.' },
+                { img: img('peringatan', '1b'), cat: 'peringatan', code: '1B', q: 'Rambu ini menunjukkan ada...', o: ['Tikungan tajam ke kanan', 'Jalan menurun', 'Tikungan tajam ke kiri', 'Jalan licin'], c: 2, e: 'Rambu tikungan tajam ke kiri. Kurangi kecepatan dan hati-hati saat memasuki tikungan.' },
+                { img: img('peringatan', '1c'), cat: 'peringatan', code: '1C', q: 'Rambu ini memperingatkan tentang...', o: ['Satu tikungan', 'Tikungan ganda (berkelok)', 'Jalan lurus', 'Persimpangan'], c: 1, e: 'Tikungan ganda berarti ada dua tikungan berurutan. Kendaraan besar perlu ekstra hati-hati.' },
+                { img: img('peringatan', '1d'), cat: 'peringatan', code: '1D', q: 'Rambu tikungan berkelok pertama ke kanan artinya...', o: ['Dua tikungan, yang pertama ke kanan', 'Satu tikungan ke kanan', 'Dua tikungan ke kiri', 'Tikungan ke kanan lalu lurus'], c: 0, e: 'Tikungan ganda dengan tikungan pertama ke kanan, diikuti tikungan ke kiri.' },
+                { img: img('peringatan', '1e'), cat: 'peringatan', code: '1E', q: 'Rambu ini menunjukkan tikungan ganda yang pertama ke...', o: ['Kanan', 'Kiri', 'Atas', 'Bawah'], c: 1, e: 'Tikungan ganda pertama ke kiri, artinya belok kiri dulu baru belok kanan.' },
+                { img: img('peringatan', '2a'), cat: 'peringatan', code: '2A', q: 'Rambu ini menginformasikan adanya...', o: ['Jalan tol', 'Persimpangan tiga sisi', 'Jembatan', 'Fly over'], c: 1, e: 'Persimpangan tiga sisi dari kiri. Waspada kendaraan dari arah samping kiri.' },
+                { img: img('peringatan', '2b'), cat: 'peringatan', code: '2B', q: 'Rambu ini menunjukkan adanya...', o: ['Persimpangan tiga', 'Persimpangan empat sisi', 'Bundaran', 'Jalan bercabang dua'], c: 1, e: 'Persimpangan empat sisi (simpang empat). Perhatikan prioritas dan lampu lalu lintas.' },
+                { img: img('peringatan', '2c'), cat: 'peringatan', code: '2C', q: 'Persimpangan tiga dari kanan ditandai rambu...', o: ['2A', '2B', '2C', '3A'], c: 2, e: 'Rambu 2C menunjukkan persimpangan tiga sisi dari kanan. Waspada kendaraan dari kanan.' },
+                { img: img('peringatan', '3a'), cat: 'peringatan', code: '3A', q: 'Rambu prioritas dari kanan artinya...', o: ['Jalan utama di kanan', 'Kendaraan dari kanan memiliki prioritas', 'Harus belok kanan', 'Jalan satu arah ke kanan'], c: 1, e: 'Kendaraan dari arah kanan memiliki prioritas untuk lewat lebih dulu.' },
+                { img: img('peringatan', '4a'), cat: 'peringatan', code: '4A', q: 'Rambu ini menunjukkan persimpangan dengan...', o: ['Jalan tol', 'Jalan prioritas', 'Jalan setapak', 'Jalur sepeda'], c: 1, e: 'Persimpangan dengan jalan prioritas. Kendaraan di jalan prioritas berhak lewat duluan.' },
+                { img: img('peringatan', '5a'), cat: 'peringatan', code: '5A', q: 'Jika melihat rambu ini, kamu harus...', o: ['Percepat kendaraan', 'Berhenti dan perhatikan kereta api', 'Klakson keras', 'Belok kiri'], c: 1, e: 'Perlintasan kereta api tanpa palang. Berhenti, lihat kiri-kanan, pastikan aman.' },
+                { img: img('peringatan', '5b'), cat: 'peringatan', code: '5B', q: 'Rambu perlintasan KA dengan palang artinya...', o: ['Tidak perlu berhenti', 'Berhenti saat palang tertutup', 'Harus berhenti selalu', 'Jalan untuk kereta saja'], c: 1, e: 'Perlintasan dengan palang otomatis. Berhenti saat palang tertutup dan lampu berkedip merah.' },
+                { img: img('peringatan', '6a'), cat: 'peringatan', code: '6A', q: 'Rambu ini ditempatkan dekat...', o: ['Rumah sakit', 'Pasar', 'Sekolah', 'Tempat ibadah'], c: 2, e: 'Zona sekolah. Kurangi kecepatan dan waspada anak-anak yang menyeberang.' },
+                { img: img('peringatan', '7a'), cat: 'peringatan', code: '7A', q: 'Rambu ini memperingatkan tentang...', o: ['Jalan rusak', 'Jalan licin', 'Genangan air', 'Jalan sempit'], c: 1, e: 'Jalan licin terutama saat hujan. Kurangi kecepatan dan hindari pengereman mendadak.' },
+                { img: img('peringatan', '8a'), cat: 'peringatan', code: '8A', q: 'Apa yang ditunjukkan rambu ini?', o: ['Jalan menanjak', 'Jalan menurun tajam', 'Tikungan', 'Jalan datar'], c: 1, e: 'Jalan menurun tajam. Gunakan rem engine dan jangan terlalu cepat.' },
+                { img: img('peringatan', '9a'), cat: 'peringatan', code: '9A', q: 'Rambu ini menandakan ada...', o: ['Jalan menurun', 'Jalan menanjak', 'Tikungan', 'Jembatan'], c: 1, e: 'Jalan menanjak di depan. Pastikan kendaraan punya tenaga cukup untuk mendaki.' },
+                { img: img('peringatan', '10a'), cat: 'peringatan', code: '10A', q: 'Penyempitan dari kanan ditandai rambu...', o: ['11A', '10A', '10B', '10C'], c: 1, e: 'Lebar jalan menyempit dari sisi kanan. Kendaraan dari depan memiliki prioritas.' },
+                { img: img('peringatan', '10b'), cat: 'peringatan', code: '10B', q: 'Rambu ini menunjukkan penyempitan dari...', o: ['Kanan', 'Kiri', 'Kedua sisi', 'Atas'], c: 1, e: 'Penyempitan dari sisi kiri. Sama seperti 10A tapi dari arah berlawanan.' },
+                { img: img('peringatan', '10c'), cat: 'peringatan', code: '10C', q: 'Penyempitan dari kedua sisi artinya...', o: ['Jalan diperlebar', 'Jalan menyempit dari kanan dan kiri', 'Jalan ditutup', 'Ada median'], c: 1, e: 'Jalan menyempit dari kedua sisi. Kurangi kecepatan dan beri jalan kendaraan dari depan.' },
+                { img: img('peringatan', '11a'), cat: 'peringatan', code: '11A', q: 'Rambu jalan menyempit artinya...', o: ['Jalan diperlebar', 'Lebar jalan berkurang di depan', 'Ada jalan baru', 'Jalan berbentuk corong'], c: 1, e: 'Lebar jalan berkurang secara keseluruhan. Hati-hati dan sesuaikan posisi kendaraan.' },
+                { img: img('peringatan', '12a'), cat: 'peringatan', code: '12A', q: 'Rambu jalan bergelombang memperingatkan...', o: ['Ada tikungan', 'Jalan tidak rata bergelombang', 'Ada polisi tidur', 'Jalan berliku'], c: 1, e: 'Permukaan jalan bergelombang. Kurangi kecepatan agar kendaraan tetap stabil.' },
+                { img: img('peringatan', '13a'), cat: 'peringatan', code: '13A', q: 'Rambu polisi tidur artinya ada...', o: ['Polisi berjaga', 'Undak-undak / speed bump', 'Zebra cross', 'Lampu merah'], c: 1, e: 'Ada polisi tidur atau undak-undak di depan. Kurangi kecepatan agar tidak merusak kendaraan.' },
+                { img: img('peringatan', '14a'), cat: 'peringatan', code: '14A', q: 'Rambu pejalan kaki menyeberang artinya...', o: ['Area berjualan', 'Ada zebra cross / penyeberangan', 'Trotoar rusak', 'Jalur pejalan kaki'], c: 1, e: 'Ada penyeberangan pejalan kaki di depan. Waspada dan beri prioritas pada pejalan kaki.' },
+                { img: img('peringatan', '14b'), cat: 'peringatan', code: '14B', q: 'Rambu anak-anak menyeberang ditempatkan di...', o: ['Rumah sakit', 'Sekolah atau taman bermain', 'Pasar', 'Stasiun'], c: 1, e: 'Ditempatkan dekat sekolah, taman kanak-kanak, atau area bermain anak.' },
+                { img: img('peringatan', '15a'), cat: 'peringatan', code: '15A', q: 'Rambu banyak pejalan kaki menandakan...', o: ['Ada festival', 'Area dengan lalu lintas pejalan kaki tinggi', 'Ada pacaran', 'Area olahraga'], c: 1, e: 'Area dengan aktivitas pejalan kaki yang tinggi. Kurangi kecepatan dan waspada.' },
+                { img: img('peringatan', '16a'), cat: 'peringatan', code: '16A', q: 'Rambu jalan berliku menandakan...', o: ['Jalan lurus panjang', 'Banyak tikungan berurutan', 'Jalan memutar', 'Ada bundaran'], c: 1, e: 'Jalan dengan banyak tikungan berurutan. Kendaraan besar perlu ekstra hati-hati.' },
+                { img: img('peringatan', '17a'), cat: 'peringatan', code: '17A', q: 'Rambu jembatan menandakan...', o: ['Ada sungai', 'Jembatan di depan', 'Jembatan rusak', 'Ferry'], c: 1, e: 'Ada jembatan di depan. Perhatikan beban maksimum dan lebar jembatan.' },
+                { img: img('peringatan', '18a'), cat: 'peringatan', code: '18A', q: 'Rambu ini menunjukkan ada...', o: ['Bandara', 'Pelabuhan', 'Stasiun', 'Pabrik'], c: 1, e: 'Rambu petunjuk pelabuhan. Menandakan ada pelabuhan di dekat lokasi.' },
+                { img: img('peringatan', '19a'), cat: 'peringatan', code: '19A', q: 'Rambu ini menginformasikan adanya...', o: ['Pelabuhan', 'Industri', 'Bandara / pesawat terbang', 'Helipad'], c: 2, e: 'Rambu peringatan area bandara. Bisa ada pesawat terbang rendah di sekitar area.' },
+                { img: img('peringatan', '20a'), cat: 'peringatan', code: '20A', q: 'Rambu angin kencang memperingatkan...', o: ['Ada kipas angin', 'Angin silang yang kuat', 'AC rusak', 'Tornado'], c: 1, e: 'Angin silang kuat di area tersebut. Pegang setir erat-erat dan kurangi kecepatan.' },
+                { img: img('peringatan', '21a'), cat: 'peringatan', code: '21A', q: 'Rambu hewan liar memperingatkan...', o: ['Ada kebun binatang', 'Hewan liar bisa menyeberang jalan', 'Ada peternakan', 'Sirkus'], c: 1, e: 'Area yang sering dilewati hewan liar. Kurangi kecepatan dan waspada.' },
+                { img: img('peringatan', '21b'), cat: 'peringatan', code: '21B', q: 'Rambu hewan ternak artinya...', o: ['Ada pasar hewan', 'Sapi/ternak bisa menyeberang jalan', 'Area peternakan', 'Rumah pemotongan hewan'], c: 1, e: 'Area yang sering dilewati hewan ternak seperti sapi atau kambing.' },
+                { img: img('peringatan', '22a'), cat: 'peringatan', code: '22A', q: 'Rambu batu jatuh memperingatkan...', o: ['Ada quarry', 'Bisa ada batu jatuh dari tebing', 'Jalan berbatu', 'Ada tambang'], c: 1, e: 'Area rawan longsor atau batu jatuh dari tebing di sisi jalan.' },
+                { img: img('peringatan', '23a'), cat: 'peringatan', code: '23A', q: 'Rambu bahan peledak/bahan berbahaya artinya...', o: ['Ada tambang', 'Kendaraan pengangkut bahan berbahaya sering lewat', 'Ada gudang senjata', 'Area militer'], c: 1, e: 'Area yang dilalui kendaraan pengangkut bahan berbahaya atau peledak.' },
+                { img: img('peringatan', '24a'), cat: 'peringatan', code: '24A', q: 'Rambu kabut memperingatkan...', o: ['Ada asap pabrik', 'Jarak pandang berkurang karena kabut', 'AC berkabut', 'Ada api'], c: 1, e: 'Area rawan kabut tebal. Nyalakan lampu, kurangi kecepatan, jaga jarak.' },
+                { img: img('peringatan', '25a'), cat: 'peringatan', code: '25A', q: 'Rambu genangan air/banjir artinya...', o: ['Ada kolam', 'Jalan bisa tergenang air', 'Ada sungai', 'Ada irigasi'], c: 1, e: 'Jalan rawan tergenang air saat hujan. Pertimbangkan rute alternatif.' },
+                { img: img('peringatan', '26a'), cat: 'peringatan', code: '26A', q: 'Rambu ini menandakan...', o: ['Jalan baru', 'Jalan rusak / berlubang', 'Pekerjaan jalan', 'Jalan ditutup'], c: 1, e: 'Ada kerusakan jalan seperti lubang atau permukaan tidak rata. Kurangi kecepatan.' },
+                { img: img('peringatan', '27a'), cat: 'peringatan', code: '27A', q: 'Rambu pekerjaan jalan artinya...', o: ['Ada tukang', 'Area konstruksi / perbaikan jalan', 'Ada bengkel', 'Pabrik'], c: 1, e: 'Ada pekerjaan perbaikan jalan. Ikuti rambu pengalihan dan kurangi kecepatan.' },
+                { img: img('peringatan', '28a'), cat: 'peringatan', code: '28A', q: 'Rambu putaran/bundaran menandakan...', o: ['Jalan memutar', 'Ada bundaran di depan', 'U-turn wajib', 'Jalan lingkaran'], c: 1, e: 'Ada bundaran di depan. Kendaraan di dalam bundaran memiliki prioritas.' },
+                { img: img('peringatan', '29a'), cat: 'peringatan', code: '29A', q: 'Rambu lalu lintas dua arah artinya...', o: ['Jalan satu arah berakhir', 'Mulai jalan dua arah', 'Ada dua lajur', 'Bisa lewat dua arah'], c: 1, e: 'Jalan yang sebelumnya satu arah akan berubah menjadi dua arah.' },
+                { img: img('peringatan', '30a'), cat: 'peringatan', code: '30A', q: 'Rambu jalur sepeda menandakan...', o: ['Dilarang sepeda', 'Ada jalur khusus sepeda', 'Sepeda wajib di jalan raya', 'Area parkir sepeda'], c: 1, e: 'Ada jalur khusus sepeda di sisi jalan. Jangan masuk ke jalur sepeda.' }
+            ],
+            larangan: [
+                { img: img('larangan', '1l'), cat: 'larangan', code: '1L', q: 'Apa arti rambu ini?', o: ['Dilarang parkir', 'Dilarang berhenti', 'Dilarang masuk', 'Dilarang putar balik'], c: 2, e: 'Dilarang masuk untuk semua kendaraan dari arah rambu ini. Biasanya di jalan satu arah.' },
+                { img: img('larangan', '2la'), cat: 'larangan', code: '2La', q: 'Rambu ini melarang masuk untuk...', o: ['Semua kendaraan', 'Kendaraan bermotor', 'Pejalan kaki', 'Sepeda'], c: 1, e: 'Dilarang masuk untuk kendaraan bermotor. Pejalan kaki dan sepeda biasanya masih diperbolehkan.' },
+                { img: img('larangan', '2lb'), cat: 'larangan', code: '2Lb', q: 'Rambu ini melarang...', o: ['Mobil masuk', 'Sepeda motor masuk', 'Truk masuk', 'Bus masuk'], c: 1, e: 'Dilarang masuk untuk sepeda motor. Area ini hanya untuk pejalan kaki atau kendaraan tertentu.' },
+                { img: img('larangan', '2lc'), cat: 'larangan', code: '2Lc', q: 'Rambu ini melarang kendaraan jenis...', o: ['Sepeda motor', 'Mobil penumpang', 'Truk', 'Bus'], c: 2, e: 'Dilarang masuk untuk truk. Biasa ditempatkan di jalan yang tidak kuat menahan beban truk.' },
+                { img: img('larangan', '2ld'), cat: 'larangan', code: '2Ld', q: 'Rambu ini melarang masuk kendaraan yang mengangkut...', o: ['Penumpang', 'Barang berbahaya / berbahaya', 'Makanan', 'Kayu'], c: 1, e: 'Kendaraan pengangkut bahan berbahaya (B3) dilarang memasuki area ini.' },
+                { img: img('larangan', '2lh'), cat: 'larangan', code: '2Lh', q: 'Rambu ini melarang... masuk', o: ['Motor', 'Sepeda', 'Pejalan kaki', 'Truk'], c: 1, e: 'Dilarang masuk untuk sepeda. Gunakan jalur sepeda yang tersedia.' },
+                { img: img('larangan', '2li'), cat: 'larangan', code: '2Li', q: 'Rambu ini dilarang masuk untuk...', o: ['Kendaraan roda dua', 'Pejalan kaki', 'Sepeda motor', 'Anak-anak'], c: 1, e: 'Dilarang masuk untuk pejalan kaki. Gunakan trotoar atau jembatan penyeberangan.' },
+                { img: img('larangan', '3l'), cat: 'larangan', code: '3L', q: 'Rambu ini melarang kita untuk...', o: ['Berhenti sesaat', 'Parkir kendaraan', 'Melintas', 'Berbelok'], c: 1, e: 'Dilarang parkir. Tidak boleh meninggalkan kendaraan berhenti di area ini.' },
+                { img: img('larangan', '4l'), cat: 'larangan', code: '4L', q: 'Dilarang berhenti artinya...', o: ['Boleh parkir sebentar', 'Tidak boleh berhenti sama sekali', 'Hanya bus yang boleh berhenti', 'Boleh berhenti malam hari'], c: 1, e: 'Lebih ketat dari dilarang parkir. Tidak boleh berhenti kecuali dalam kondisi darurat.' },
+                { img: img('larangan', '5la'), cat: 'larangan', code: '5La', q: 'Rambu ini melarang pengendara untuk...', o: ['Belok kanan', 'Belok kiri', 'Putar balik', 'Mundur'], c: 1, e: 'Dilarang belok kiri di persimpangan atau titik rambu ini dipasang.' },
+                { img: img('larangan', '5lb'), cat: 'larangan', code: '5Lb', q: 'Apa yang dilarang oleh rambu ini?', o: ['Belok kanan', 'Berhenti', 'Putar balik', 'Parkir'], c: 0, e: 'Dilarang belok kanan. Biasanya untuk menjaga kelancaran arus lalu lintas.' },
+                { img: img('larangan', '5lc'), cat: 'larangan', code: '5Lc', q: 'Rambu ini melarang belok ke...', o: ['Kiri saja', 'Kanan saja', 'Kiri dan kanan (harus lurus)', 'Mundur'], c: 2, e: 'Dilarang belok kiri maupun kanan. Pengendara harus tetap lurus.' },
+                { img: img('larangan', '6l'), cat: 'larangan', code: '6L', q: 'Rambu dilarang putar balik artinya...', o: ['Dilarang belok', 'Dilarang mundur', 'Dilarang U-turn', 'Dilarang parkir'], c: 2, e: 'Dilarang melakukan putar balik (U-turn) di titik tersebut.' },
+                { img: img('larangan', '7l'), cat: 'larangan', code: '7L', q: 'Rambu dilarang mendahului artinya...', o: ['Dilarang ngebut', 'Dilarang menyalip kendaraan di depan', 'Dilarang berhenti', 'Dilarang klakson'], c: 1, e: 'Dilarang mendahului. Biasanya di jalan sempit, tikungan, atau area berbahaya.' },
+                { img: img('larangan', '8la'), cat: 'larangan', code: '8La', q: 'Batas kecepatan menurut rambu ini...', o: ['10 km/jam', '20 km/jam', '30 km/jam', '50 km/jam'], c: 0, e: 'Batas kecepatan maksimum 10 km/jam. Sangat pelan, biasa di area khusus.' },
+                { img: img('larangan', '8lb'), cat: 'larangan', code: '8Lb', q: 'Batas kecepatan pada rambu ini adalah...', o: ['10 km/jam', '20 km/jam', '30 km/jam', '40 km/jam'], c: 1, e: 'Batas kecepatan maksimum 20 km/jam. Biasa di area padat atau gang sempit.' },
+                { img: img('larangan', '8lc'), cat: 'larangan', code: '8Lc', q: 'Rambu batas kecepatan 30 km/jam ditempatkan di...', o: ['Jalan tol', 'Area sekolah / pemukiman', 'Jalan tol dalam kota', 'Jalan provinsi'], c: 1, e: '30 km/jam biasa di area sekolah, pasar, atau pemukiman padat.' },
+                { img: img('larangan', '8ld'), cat: 'larangan', code: '8Ld', q: 'Batas kecepatan 40 km/jam umumnya di...', o: ['Jalan tol', 'Jalan kota yang ramai', 'Pemukiman sepi', 'Jalan desa'], c: 1, e: '40 km/jam umum di jalan kota yang cukup ramai tapi tidak terlalu padat.' },
+                { img: img('larangan', '8le'), cat: 'larangan', code: '8Le', q: 'Batas kecepatan pada rambu ini...', o: ['30 km/jam', '40 km/jam', '50 km/jam', '60 km/jam'], c: 2, e: '50 km/jam adalah batas umum di jalan kota yang tidak sempit.' },
+                { img: img('larangan', '8lf'), cat: 'larangan', code: '8Lf', q: 'Rambu ini menunjukkan batas kecepatan...', o: ['50 km/jam', '60 km/jam', '70 km/jam', '80 km/jam'], c: 1, e: 'Batas kecepatan maksimum 60 km/jam. Biasa di jalan utama dalam kota.' },
+                { img: img('larangan', '8lg'), cat: 'larangan', code: '8Lg', q: 'Batas kecepatan 70 km/jam ditandai rambu...', o: ['8Le', '8Lf', '8Lg', '8Lh'], c: 2, e: 'Rambu 8Lg menunjukkan batas kecepatan maksimum 70 km/jam.' },
+                { img: img('larangan', '8lh'), cat: 'larangan', code: '8Lh', q: 'Batas kecepatan pada rambu ini...', o: ['60 km/jam', '70 km/jam', '80 km/jam', '100 km/jam'], c: 2, e: '80 km/jam biasa di jalan provinsi atau jalur alternatif luar kota.' },
+                { img: img('larangan', '8li'), cat: 'larangan', code: '8Li', q: 'Rambu batas kecepatan 100 km/jam biasa di...', o: ['Jalan kota', 'Jalan tol', 'Pemukiman', 'Area pasar'], c: 1, e: '100 km/jam adalah batas kecepatan di jalan tol Indonesia.' },
+                { img: img('larangan', '9la'), cat: 'larangan', code: '9La', q: 'Rambu ini melarang kendaraan yang melebihi...', o: ['Tinggi tertentu', 'Lebar tertentu', 'Panjang tertentu', 'Berat tertentu'], c: 1, e: 'Dilarang untuk kendaraan yang lebarnya melebihi batas yang tertera.' },
+                { img: img('larangan', '9lb'), cat: 'larangan', code: '9Lb', q: 'Rambu ini melarang kendaraan melebihi...', o: ['Lebar', 'Tinggi', 'Berat', 'Panjang'], c: 1, e: 'Dilarang untuk kendaraan yang tingginya melebihi batas. Biasa di bawah jembatan atau terowongan.' },
+                { img: img('larangan', '9lc'), cat: 'larangan', code: '9Lc', q: 'Rambu dilarang melebihi berat tertentu artinya...', o: ['Penumpang tidak boleh gemuk', 'Total berat kendaraan dibatasi', 'Harus kosong', 'Hanya untuk motor'], c: 1, e: 'Kendaraan dengan total berat melebihi batas dilarang lewat. Biasa di jembatan.' },
+                { img: img('larangan', '10l'), cat: 'larangan', code: '10L', q: 'Rambu ini melarang pengendara untuk...', o: ['Menyalakan lampu', 'Membunyikan klakson', 'Menggunakan rem', 'Mempercepat'], c: 1, e: 'Dilarang membunyikan klakson. Biasa di depan rumah sakit, sekolah, atau tempat ibadah.' },
+                { img: img('larangan', '11l'), cat: 'larangan', code: '11L', q: 'Rambu ini melarang membawa barang yang...', o: ['Berat', 'Melebihi panjang tertentu', 'Berbahaya', 'Basah'], c: 1, e: 'Dilarang membawa barang yang panjangnya melebihi batas yang tertera pada rambu.' },
+                { img: img('larangan', '12l'), cat: 'larangan', code: '12L', q: 'Rambu ini melarang kendaraan yang...', o: ['Tua', 'Mengeluarkan asap tebal', 'Berwarna hitam', 'Besar'], c: 1, e: 'Dilarang masuk untuk kendaraan yang mengeluarkan asap tebal melebihi batas.' },
+                { img: img('larangan', '13l'), cat: 'larangan', code: '13L', q: 'Rambu akhir larangan artinya...', o: ['Semua larangan berakhir', 'Ada larangan baru', 'Jalan ditutup', 'Larangan hanya malam hari'], c: 0, e: 'Semua larangan yang sebelumnya berlaku berakhir di titik rambu ini.' }
+            ],
+            perintah: [
+                { img: img('perintah', '1a'), cat: 'perintah', code: '1A', q: 'Rambu ini mengharuskan pengendara untuk...', o: ['Berhenti', 'Lurus wajib', 'Belok kanan', 'Putar balik'], c: 1, e: 'Pengendara wajib tetap lurus. Tidak boleh belok kiri maupun kanan.' },
+                { img: img('perintah', '1b'), cat: 'perintah', code: '1B', q: 'Rambu ini artinya pengendara wajib...', o: ['Lurus', 'Belok kiri', 'Belok kanan', 'Mundur'], c: 1, e: 'Wajib belok ke kiri. Tidak boleh lurus atau belok kanan.' },
+                { img: img('perintah', '1c'), cat: 'perintah', code: '1C', q: 'Apa yang diwajibkan rambu ini?', o: ['Lurus', 'Belok kiri', 'Belok kanan wajib', 'Berhenti'], c: 2, e: 'Wajib belok ke kanan. Tidak boleh lurus atau belok kiri.' },
+                { img: img('perintah', '2a'), cat: 'perintah', code: '2A', q: 'Rambu ini mengharuskan...', o: ['Hanya lurus', 'Hanya belok kiri', 'Lurus atau belok kiri', 'Belok kanan'], c: 2, e: 'Pengendara boleh lurus atau belok kiri, tapi tidak boleh belok kanan.' },
+                { img: img('perintah', '2b'), cat: 'perintah', code: '2B', q: 'Rambu ini memperbolehkan...', o: ['Lurus atau belok kanan', 'Lurus atau belok kiri', 'Hanya lurus', 'Hanya belok kanan'], c: 0, e: 'Pengendara boleh lurus atau belok kanan, tapi tidak boleh belok kiri.' },
+                { img: img('perintah', '2c'), cat: 'perintah', code: '2C', q: 'Rambu ini menandakan harus...', o: ['Lurus', 'Belok kiri atau kanan', 'Mundur', 'Berhenti'], c: 1, e: 'Wajib memilih belok kiri atau kanan. Tidak boleh lurus.' },
+                { img: img('perintah', '3a'), cat: 'perintah', code: '3A', q: 'Rambu putar balik wajib artinya...', o: ['Dilarang putar balik', 'Wajib melakukan U-turn', 'Boleh putar balik', 'Wajib mundur'], c: 1, e: 'Pengendara wajib melakukan putar balik. Tidak boleh lurus atau belok.' },
+                { img: img('perintah', '4a'), cat: 'perintah', code: '4A', q: 'Rambu jalur khusus sepeda artinya...', o: ['Dilarang sepeda', 'Wajib menggunakan jalur sepeda', 'Sepeda di jalan raya', 'Parkir sepeda'], c: 1, e: 'Sepeda wajib menggunakan jalur khusus sepeda. Kendaraan bermotor dilarang masuk.' },
+                { img: img('perintah', '4b'), cat: 'perintah', code: '4B', q: 'Rambu jalur khusus bus artinya...', o: ['Semua kendaraan boleh', 'Hanya bus yang boleh di jalur ini', 'Dilarang bus', 'Bus harus berhenti'], c: 1, e: 'Jalur yang hanya boleh digunakan oleh bus umum. Kendaraan pribadi dilarang.' },
+                { img: img('perintah', '4c'), cat: 'perintah', code: '4C', q: 'Rambu jalur pejalan kaki menandakan...', o: ['Dilarang jalan kaki', 'Pejalan kaki wajib di trotoar', 'Area khusus pejalan kaki', 'Parkir pejalan kaki'], c: 1, e: 'Pejalan kaki wajib menggunakan jalur/trotoar yang disediakan.' },
+                { img: img('perintah', '5a'), cat: 'perintah', code: '5A', q: 'Rambu kecepatan minimum artinya...', o: ['Dilarang ngebut', 'Harus melampaui kecepatan ini', 'Kecepatan tidak boleh di bawah batas', 'Kecepatan bebas'], c: 2, e: 'Kendaraan harus melaju dengan kecepatan tidak kurang dari batas yang tertera.' },
+                { img: img('perintah', '6a'), cat: 'perintah', code: '6A', q: 'Rambu bundaran wajib artinya...', o: ['Dilarang masuk bundaran', 'Wajib mengelilingi bundaran', 'Bundaran ditutup', 'Hanya pejalan kaki'], c: 1, e: 'Kendaraan wajib mengelilingi bundaran (putaran). Tidak boleh memotong lurus.' }
+            ],
+            petunjuk: [
+                { img: img('petunjuk', '1p'), cat: 'petunjuk', code: '1P', q: 'Apa arti rambu ini?', o: ['Jalan dua arah', 'Jalan satu arah', 'Jalan tol', 'Jalur pejalan kaki'], c: 1, e: 'Menunjukkan jalan satu arah. Kendaraan hanya boleh mengarah ke satu arah.' },
+                { img: img('petunjuk', '2p'), cat: 'petunjuk', code: '2P', q: 'Rambu arah yang diperbolehkan menunjukkan...', o: ['Arah wajib', 'Arah yang boleh dilalui', 'Arah dilarang', 'Jalan buntu'], c: 1, e: 'Menunjukkan arah-arah yang diperbolehkan untuk dilewati.' },
+                { img: img('petunjuk', '3p'), cat: 'petunjuk', code: '3P', q: 'Rambu jalur kendaraan lambat artinya...', o: ['Semua kendaraan lambat', 'Kendaraan lambat harus di jalur ini', 'Dilarang lambat', 'Jalur darurat'], c: 1, e: 'Kendaraan yang melaju lebih lambat harus menggunakan jalur ini.' },
+                { img: img('petunjuk', '4p'), cat: 'petunjuk', code: '4P', q: 'Rambu ini menunjukkan adanya...', o: ['Halte bus', 'Area parkir', 'Pom bensin', 'Rumah sakit'], c: 1, e: 'Huruf P biru menunjukkan lokasi area parkir terdekat.' },
+                { img: img('petunjuk', '5p'), cat: 'petunjuk', code: '5P', q: 'Rambu tempat istirahat menandakan...', o: ['Rumah sakit', 'Area perhentian / rest area', 'Pom bensin', 'Bengkel'], c: 1, e: 'Ada tempat istirahat di depan. Biasa di jalan tol atau jalan antar kota.' },
+                { img: img('petunjuk', '6p'), cat: 'petunjuk', code: '6P', q: 'Rambu ini menunjukkan lokasi...', o: ['Rumah makan', 'Pom bensin (SPBU)', 'Bengkel', 'Tempat wisata'], c: 1, e: 'Menunjukkan lokasi Stasiun Pengisian Bahan Bakar Umum (SPBU) terdekat.' },
+                { img: img('petunjuk', '7p'), cat: 'petunjuk', code: '7P', q: 'Rambu ini mengarahkan ke...', o: ['Sekolah', 'Pasar', 'Rumah sakit', 'Kantor polisi'], c: 2, e: 'Rambu petunjuk rumah sakit membantu menemukan fasilitas kesehatan terdekat.' },
+                { img: img('petunjuk', '8p'), cat: 'petunjuk', code: '8P', q: 'Rambu ini menunjukkan ada...', o: ['Rumah makan', 'Kantor polisi', 'Rumah sakit', 'Sekolah'], c: 1, e: 'Menunjukkan lokasi kantor polisi terdekat untuk melapor atau meminta bantuan.' },
+                { img: img('petunjuk', '9p'), cat: 'petunjuk', code: '9P', q: 'Rambu halte bus membantu...', o: ['Bus berhenti', 'Penumpang menemukan halte', 'Supir bus', 'Parkir bus'], c: 1, e: 'Menunjukkan lokasi halte pemberhentian bus umum terdekat.' },
+                { img: img('petunjuk', '10p'), cat: 'petunjuk', code: '10P', q: 'Rambu tempat ibadah menunjukkan...', o: ['Masjid saja', 'Lokasi tempat ibadah terdekat', 'Gereja saja', 'Pura saja'], c: 1, e: 'Menunjukkan lokasi tempat ibadah (masjid, gereja, pura, vihara, kelenteng) terdekat.' },
+                { img: img('petunjuk', '11p'), cat: 'petunjuk', code: '11P', q: 'Rambu bundaran menginformasikan...', o: ['Jalan berakhir', 'Ada bundaran di depan', 'Dilarang bundaran', 'Parkir bundaran'], c: 1, e: 'Ada bundaran di depan. Kendaraan di dalam bundaran memiliki prioritas.' },
+                { img: img('petunjuk', '12p'), cat: 'petunjuk', code: '12P', q: 'Rambu terminal bus menunjukkan...', o: ['Halte bus', 'Terminal bus utama', 'Parkir bus', 'Bengkel bus'], c: 1, e: 'Menunjukkan lokasi terminal bus untuk keberangkatan dan kedatangan bus.' },
+                { img: img('petunjuk', '13p'), cat: 'petunjuk', code: '13P', q: 'Rambu stasiun kereta api menandakan...', o: ['Rel kereta', 'Lokasi stasiun KA terdekat', 'Perlintasan', 'Gudang kereta'], c: 1, e: 'Menunjukkan lokasi stasiun kereta api terdekat.' },
+                { img: img('petunjuk', '14p'), cat: 'petunjuk', code: '14P', q: 'Rambu ini mengarahkan ke...', o: ['Pelabuhan', 'Stasiun', 'Bandara', 'Terminal'], c: 2, e: 'Menunjukkan arah ke bandara / lapangan terbang terdekat.' },
+                { img: img('petunjuk', '15p'), cat: 'petunjuk', code: '15P', q: 'Rambu pelabuhan menunjukkan...', o: ['Pantai', 'Lokasi pelabuhan', 'Kapal', 'Nelayan'], c: 1, e: 'Menunjukkan arah menuju pelabuhan terdekat.' }
+            ],
+            keselamatan: [
+                { img: null, icon: 'fa-traffic-light', fb: '#D32F2F', code: '', q: 'Saat lampu lalu lintas menyala merah, apa yang harus dilakukan?', o: ['Percepat agar cepat lewat', 'Berhenti di belakang garis berhenti', 'Klakson agar lampu hijau', 'Pelan-pelan tetap jalan'], c: 1, e: 'Lampu merah wajib berhenti. Tunggu di belakang garis berhenti sampai lampu hijau.' },
+                { img: null, icon: 'fa-traffic-light', fb: '#FFD600', code: '', q: 'Lampu kuning menyala artinya...', o: ['Aman untuk lewat', 'Siap-siap berhenti, berhenti jika masih aman', 'Percepat', 'Lampu rusak'], c: 1, e: 'Kuning = peringatan. Bersiap berhenti. Jika sudah terlalu dekat dan tidak bisa berhenti aman, lanjutkan.' },
+                { img: null, icon: 'fa-traffic-light', fb: '#2E7D32', code: '', q: 'Lampu hijau berarti...', o: ['Berhenti dulu lalu jalan', 'Boleh melanjutkan perjalanan', 'Percepat maksimal', 'Belok kanan wajib'], c: 1, e: 'Lampu hijau = boleh jalan. Tetap waspada kendaraan lain dan pejalan kaki.' },
+                { img: null, icon: 'fa-helmet-safety', fb: '#0D47A1', code: '', q: 'Apa yang wajib dipakai saat berkendara sepeda motor?', o: ['Kacamata hitam', 'Helm SNI', 'Sarung tangan', 'Jaket tebal'], c: 1, e: 'Helm SNI (Standar Nasional Indonesia) wajib dipakai pengendara dan penumpang motor.' },
+                { img: null, icon: 'fa-person-walking', fb: '#2E7D32', code: '', q: 'Saat menyeberang jalan, sebaiknya di...', o: ['Sembarang tempat', 'Zebra cross atau jembatan penyeberangan', 'Tengah jalan saat sepi', 'Di tikungan'], c: 1, e: 'Selalu menyeberang di zebra cross, jembatan penyeberangan, atau underpass.' },
+                { img: null, icon: 'fa-arrows-left-right', fb: '#FF8F00', code: '', q: 'Saat ingin berbelok, apa yang harus dilakukan duluan?', o: ['Langsung belok', 'Menyalakan lampu sein', 'Menghentikan kendaraan', 'Mengklakson'], c: 1, e: 'Lampu sein wajib dinyalakan minimal 3 detik sebelum berbelok sebagai tanda.' },
+                { img: null, icon: 'fa-gauge-high', fb: '#FF6D00', code: '', q: 'Kecepatan maksimal di area pemukiman menurut UU Lalu Lintas...', o: ['20 km/jam', '30 km/jam', '50 km/jam', '60 km/jam'], c: 1, e: 'Berdasarkan UU No. 22 Tahun 2009, kecepatan maksimal di pemukiman adalah 30 km/jam.' },
+                { img: null, icon: 'fa-truck-medical', fb: '#D32F2F', code: '', q: 'Jika mendengar sirine ambulans di belakang, kamu harus...', o: ['Percepat agar tidak terhalang', 'Menepi dan memberi jalan', 'Tetap di lajur sama', 'Berhenti mendadak'], c: 1, e: 'Kendaraan dengan sirine memiliki prioritas. Segera menepi dan berikan jalan.' },
+                { img: null, icon: 'fa-mobile-screen', fb: '#D32F2F', code: '', q: 'Menggunakan handphone saat berkendara...', o: ['Boleh sebentar', 'Dilarang keras', 'Boleh saat lampu merah', 'Boleh pakai bluetooth'], c: 1, e: 'UU Lalu Lintas melarang penggunaan handphone saat berkendara kecuali menggunakan handsfree.' },
+                { img: null, icon: 'fa-wine-glass', fb: '#D32F2F', code: '', q: 'Berkendara dalam keadaan mabuk...', o: ['Boleh jika sedikit', 'Dilarang keras', 'Boleh malam hari', 'Boleh jika dekat rumah'], c: 1, e: 'Berkendara dalam pengaruh alkohol atau narkotika dilarang keras dan bisa dipidana.' },
+                { img: null, icon: 'fa-seat-belt', fb: '#0D47A1', code: '', q: 'Sabuk pengaman wajib dipakai oleh...', o: ['Pengemudi saja', 'Pengemudi dan penumpang depan', 'Semua penumpang', 'Tidak wajib'], c: 1, e: 'Pengemudi dan penumpang di kursi depan wajib menggunakan sabuk pengaman.' },
+                { img: null, icon: 'fa-child', fb: '#FF8F00', code: '', q: 'Anak di bawah umur naik sepeda motor...', o: ['Boleh tanpa helm', 'Wajib pakai helm dan di belakang', 'Tidak boleh sama sekali', 'Boleh di depan'], c: 1, e: 'Anak boleh menjadi penumpang dengan syarat wajib memakai helm dan duduk di belakang.' },
+                { img: null, icon: 'fa-motorcycle', fb: '#0D47A1', code: '', q: 'Jumlah maksimal penumpang sepeda motor menurut UU...', o: ['1 orang', '2 orang', '3 orang', 'Tidak dibatasi'], c: 1, e: 'Sepeda motor maksimal membawa 2 orang (pengemudi + 1 penumpang).' },
+                { img: null, icon: 'fa-car', fb: '#FF6D00', code: '', q: 'Jarak aman mengikuti kendaraan di depan minimal...', o: ['1 meter', '2 detik waktu tempuh', '5 meter', 'Tidak ada aturan'], c: 1, e: 'Gunakan aturan 2 detik: pastikan kamu melewati titik yang sama 2 detik setelah kendaraan depan.' },
+                { img: null, icon: 'fa-road', fb: '#607D8B', code: '', q: 'Saat berkendara di malam hari, lampu utama harus...', o: ['Dimatikan', 'Dinyalakan', 'Dikedipkan', 'Hanya saat hujan'], c: 1, e: 'Lampu utama wajib dinyalakan saat malam hari atau kondisi gelap/kabut.' }
+            ]
+        };
+
+        // ==================== DATABASE GALERI ====================
+        const GAL = {
+            peringatan: [
+                { f: img('peringatan', '1a'), c: '1A', n: 'Tikungan Tajam ke Kanan', d: 'Peringatan jalan berbelok tajam ke kanan. Kurangi kecepatan dan waspada.', bg: '#FFD600' },
+                { f: img('peringatan', '1b'), c: '1B', n: 'Tikungan Tajam ke Kiri', d: 'Peringatan jalan berbelok tajam ke kiri. Kurangi kecepatan.', bg: '#FFD600' },
+                { f: img('peringatan', '1c'), c: '1C', n: 'Tikungan Ganda (Berkelok)', d: 'Dua tikungan berurutan. Kendaraan besar perlu ekstra hati-hati.', bg: '#FFD600' },
+                { f: img('peringatan', '1d'), c: '1D', n: 'Tikungan Ganda Pertama Kanan', d: 'Tikungan ganda, tikungan pertama ke kanan.', bg: '#FFD600' },
+                { f: img('peringatan', '1e'), c: '1E', n: 'Tikungan Ganda Pertama Kiri', d: 'Tikungan ganda, tikungan pertama ke kiri.', bg: '#FFD600' },
+                { f: img('peringatan', '2a'), c: '2A', n: 'Persimpangan Tiga dari Kiri', d: 'Persimpangan tiga sisi dari kiri. Waspada dari samping.', bg: '#FFD600' },
+                { f: img('peringatan', '2b'), c: '2B', n: 'Persimpangan Empat Sisi', d: 'Simpang empat. Perhatikan prioritas dan lampu lalu lintas.', bg: '#FFD600' },
+                { f: img('peringatan', '2c'), c: '2C', n: 'Persimpangan Tiga dari Kanan', d: 'Persimpangan tiga sisi dari kanan.', bg: '#FFD600' },
+                { f: img('peringatan', '3a'), c: '3A', n: 'Prioritas dari Kanan', d: 'Kendaraan dari kanan memiliki prioritas.', bg: '#FFD600' },
+                { f: img('peringatan', '4a'), c: '4A', n: 'Persimpangan Jalan Prioritas', d: 'Persimpangan dengan jalan yang memiliki prioritas.', bg: '#FFD600' },
+                { f: img('peringatan', '5a'), c: '5A', n: 'Perlintasan KA Tanpa Palang', d: 'Rel kereta api tanpa palang. Berhenti, lihat, aman baru lewat.', bg: '#FFD600' },
+                { f: img('peringatan', '5b'), c: '5B', n: 'Perlintasan KA Dengan Palang', d: 'Rel kereta api dengan palang otomatis.', bg: '#FFD600' },
+                { f: img('peringatan', '6a'), c: '6A', n: 'Daerah Sekolah', d: 'Zona sekolah. Kurangi kecepatan, waspada anak.', bg: '#FFD600' },
+                { f: img('peringatan', '7a'), c: '7A', n: 'Jalan Licin', d: 'Permukaan jalan licin terutama saat hujan.', bg: '#FFD600' },
+                { f: img('peringatan', '8a'), c: '8A', n: 'Jalan Menurun', d: 'Ada tanjakan menurun. Gunakan rem engine.', bg: '#FFD600' },
+                { f: img('peringatan', '9a'), c: '9A', n: 'Jalan Menanjak', d: 'Ada tanjakan menanjak. Pastikan kendaraan bertenaga cukup.', bg: '#FFD600' },
+                { f: img('peringatan', '10a'), c: '10A', n: 'Penyempitan dari Kanan', d: 'Lebar jalan menyempit dari sisi kanan.', bg: '#FFD600' },
+                { f: img('peringatan', '10b'), c: '10B', n: 'Penyempitan dari Kiri', d: 'Lebar jalan menyempit dari sisi kiri.', bg: '#FFD600' },
+                { f: img('peringatan', '10c'), c: '10C', n: 'Penyempitan Kedua Sisi', d: 'Jalan menyempit dari kanan dan kiri.', bg: '#FFD600' },
+                { f: img('peringatan', '11a'), c: '11A', n: 'Jalan Menyempit', d: 'Lebar jalan berkurang secara keseluruhan.', bg: '#FFD600' },
+                { f: img('peringatan', '12a'), c: '12A', n: 'Jalan Bergelombang', d: 'Permukaan jalan bergelombang/tidak rata.', bg: '#FFD600' },
+                { f: img('peringatan', '13a'), c: '13A', n: 'Polisi Tidur / Undak-undak', d: 'Ada speed bump. Kurangi kecepatan.', bg: '#FFD600' },
+                { f: img('peringatan', '14a'), c: '14A', n: 'Pejalan Kaki Menyeberang', d: 'Ada zebra cross atau penyeberangan pejalan kaki.', bg: '#FFD600' },
+                { f: img('peringatan', '14b'), c: '14B', n: 'Anak-anak Menyeberang', d: 'Area dekat sekolah atau taman bermain.', bg: '#FFD600' },
+                { f: img('peringatan', '15a'), c: '15A', n: 'Banyak Pejalan Kaki', d: 'Area dengan lalu lintas pejalan kaki tinggi.', bg: '#FFD600' },
+                { f: img('peringatan', '16a'), c: '16A', n: 'Jalan Berliku', d: 'Banyak tikungan berurutan.', bg: '#FFD600' },
+                { f: img('peringatan', '17a'), c: '17A', n: 'Jembatan', d: 'Ada jembatan di depan. Perhatikan beban maksimum.', bg: '#FFD600' },
+                { f: img('peringatan', '18a'), c: '18A', n: 'Pelabuhan', d: 'Petunjuk adanya pelabuhan di dekat lokasi.', bg: '#FFD600' },
+                { f: img('peringatan', '19a'), c: '19A', n: 'Bandara', d: 'Area bandara. Bisa ada pesawat terbang rendah.', bg: '#FFD600' },
+                { f: img('peringatan', '20a'), c: '20A', n: 'Angin Kencang', d: 'Angin silang kuat. Pegang setir erat.', bg: '#FFD600' },
+                { f: img('peringatan', '21a'), c: '21A', n: 'Hewan Liar', d: 'Rawan hewan liar menyeberang jalan.', bg: '#FFD600' },
+                { f: img('peringatan', '21b'), c: '21B', n: 'Hewan Ternak', d: 'Rawan hewan ternak seperti sapi menyeberang.', bg: '#FFD600' },
+                { f: img('peringatan', '22a'), c: '22A', n: 'Batu Jatuh', d: 'Area rawan longsor atau batu jatuh dari tebing.', bg: '#FFD600' },
+                { f: img('peringatan', '23a'), c: '23A', n: 'Bahan Peledak', d: 'Area lalu lintas kendaraan pengangkut bahan berbahaya.', bg: '#FFD600' },
+                { f: img('peringatan', '24a'), c: '24A', n: 'Kabut', d: 'Area rawan kabut tebal. Kurangi kecepatan, nyalakan lampu.', bg: '#FFD600' },
+                { f: img('peringatan', '25a'), c: '25A', n: 'Genangan Air', d: 'Jalan rawan tergenang. Pertimbangkan rute alternatif.', bg: '#FFD600' },
+                { f: img('peringatan', '26a'), c: '26A', n: 'Jalan Rusak', d: 'Ada kerusakan jalan berupa lubang.', bg: '#FFD600' },
+                { f: img('peringatan', '27a'), c: '27A', n: 'Pekerjaan Jalan', d: 'Area konstruksi/perbaikan jalan.', bg: '#FFD600' },
+                { f: img('peringatan', '28a'), c: '28A', n: 'Bundaran', d: 'Ada bundaran. Kendaraan di dalam prioritas.', bg: '#FFD600' },
+                { f: img('peringatan', '29a'), c: '29A', n: 'Lalu Lintas Dua Arah', d: 'Jalan satu arah berakhir, mulai dua arah.', bg: '#FFD600' },
+                { f: img('peringatan', '30a'), c: '30A', n: 'Jalur Sepeda', d: 'Ada jalur khusus sepeda di sisi jalan.', bg: '#FFD600' }
+            ],
+            larangan: [
+                { f: img('larangan', '1l'), c: '1L', n: 'Dilarang Masuk', d: 'Semua kendaraan dilarang masuk dari arah rambu.', bg: '#fff' },
+                { f: img('larangan', '2la'), c: '2La', n: 'Dilarang Kendaraan Bermotor', d: 'Kendaraan bermotor dilarang masuk.', bg: '#fff' },
+                { f: img('larangan', '2lb'), c: '2Lb', n: 'Dilarang Sepeda Motor', d: 'Sepeda motor dilarang masuk.', bg: '#fff' },
+                { f: img('larangan', '2lc'), c: '2Lc', n: 'Dilarang Truk', d: 'Truk dilarang masuk. Jalan tidak kuat menahan beban truk.', bg: '#fff' },
+                { f: img('larangan', '2ld'), c: '2Ld', n: 'Dilarang Barang Berbahaya', d: 'Kendaraan pengangkut B3 dilarang masuk.', bg: '#fff' },
+                { f: img('larangan', '2lh'), c: '2Lh', n: 'Dilarang Sepeda', d: 'Sepeda dilarang masuk area ini.', bg: '#fff' },
+                { f: img('larangan', '2li'), c: '2Li', n: 'Dilarang Pejalan Kaki', d: 'Pejalan kaki dilarang masuk. Gunakan trotoar.', bg: '#fff' },
+                { f: img('larangan', '3l'), c: '3L', n: 'Dilarang Parkir', d: 'Tidak boleh meninggalkan kendaraan berhenti.', bg: '#fff' },
+                { f: img('larangan', '4l'), c: '4L', n: 'Dilarang Berhenti', d: 'Tidak boleh berhenti sama sekali kecuali darurat.', bg: '#fff' },
+                { f: img('larangan', '5la'), c: '5La', n: 'Dilarang Belok Kiri', d: 'Tidak boleh belok kiri di titik ini.', bg: '#fff' },
+                { f: img('larangan', '5lb'), c: '5Lb', n: 'Dilarang Belok Kanan', d: 'Tidak boleh belok kanan di titik ini.', bg: '#fff' },
+                { f: img('larangan', '5lc'), c: '5Lc', n: 'Dilarang Belok Kiri & Kanan', d: 'Harus lurus, tidak boleh belok.', bg: '#fff' },
+                { f: img('larangan', '6l'), c: '6L', n: 'Dilarang Putar Balik', d: 'Tidak boleh U-turn di titik ini.', bg: '#fff' },
+                { f: img('larangan', '7l'), c: '7L', n: 'Dilarang Mendahului', d: 'Tidak boleh menyalip kendaraan di depan.', bg: '#fff' },
+                { f: img('larangan', '8la'), c: '8La', n: 'Batas Kecepatan 10 km/jam', d: 'Kecepatan maksimum sangat rendah.', bg: '#fff' },
+                { f: img('larangan', '8lb'), c: '8Lb', n: 'Batas Kecepatan 20 km/jam', d: 'Kecepatan maksimum 20 km/jam.', bg: '#fff' },
+                { f: img('larangan', '8lc'), c: '8Lc', n: 'Batas Kecepatan 30 km/jam', d: 'Biasa di area sekolah/pemukiman.', bg: '#fff' },
+                { f: img('larangan', '8ld'), c: '8Ld', n: 'Batas Kecepatan 40 km/jam', d: 'Biasa di jalan kota ramai.', bg: '#fff' },
+                { f: img('larangan', '8le'), c: '8Le', n: 'Batas Kecepatan 50 km/jam', d: 'Batas umum jalan kota.', bg: '#fff' },
+                { f: img('larangan', '8lf'), c: '8Lf', n: 'Batas Kecepatan 60 km/jam', d: 'Biasa di jalan utama kota.', bg: '#fff' },
+                { f: img('larangan', '8lg'), c: '8Lg', n: 'Batas Kecepatan 70 km/jam', d: 'Biasa di jalan arteri.', bg: '#fff' },
+                { f: img('larangan', '8lh'), c: '8Lh', n: 'Batas Kecepatan 80 km/jam', d: 'Biasa di jalan provinsi.', bg: '#fff' },
+                { f: img('larangan', '8li'), c: '8Li', n: 'Batas Kecepatan 100 km/jam', d: 'Batas kecepatan jalan tol.', bg: '#fff' },
+                { f: img('larangan', '9la'), c: '9La', n: 'Dilarang Melebihi Lebar', d: 'Kendaraan melebihi lebar tertentu dilarang.', bg: '#fff' },
+                { f: img('larangan', '9lb'), c: '9Lb', n: 'Dilarang Melebihi Tinggi', d: 'Biasa di bawah jembatan/terowongan.', bg: '#fff' },
+                { f: img('larangan', '9lc'), c: '9Lc', n: 'Dilarang Melebihi Berat', d: 'Total berat kendaraan dibatasi.', bg: '#fff' },
+                { f: img('larangan', '10l'), c: '10L', n: 'Dilarang Klakson', d: 'Dilarang membunyikan klakson. Di depan rumah sakit dll.', bg: '#fff' },
+                { f: img('larangan', '11l'), c: '11L', n: 'Dilarang Barang Panjang', d: 'Barang yang melebihi panjang tertentu dilarang.', bg: '#fff' },
+                { f: img('larangan', '12l'), c: '12L', n: 'Dilarang Kendaraan Berasap', d: 'Kendaraan asap tebal dilarang masuk.', bg: '#fff' },
+                { f: img('larangan', '13l'), c: '13L', n: 'Akhir Larangan', d: 'Semua larangan sebelumnya berakhir di titik ini.', bg: '#fff' }
+            ],
+            perintah: [
+                { f: img('perintah', '1a'), c: '1A', n: 'Lurus Wajib', d: 'Wajib tetap lurus.', bg: '#1565C0' },
+                { f: img('perintah', '1b'), c: '1B', n: 'Belok Kiri Wajib', d: 'Wajib belok kiri.', bg: '#1565C0' },
+                { f: img('perintah', '1c'), c: '1C', n: 'Belok Kanan Wajib', d: 'Wajib belok kanan.', bg: '#1565C0' },
+                { f: img('perintah', '2a'), c: '2A', n: 'Lurus atau Belok Kiri', d: 'Boleh lurus atau belok kiri.', bg: '#1565C0' },
+                { f: img('perintah', '2b'), c: '2B', n: 'Lurus atau Belok Kanan', d: 'Boleh lurus atau belok kanan.', bg: '#1565C0' },
+                { f: img('perintah', '2c'), c: '2C', n: 'Belok Kiri atau Kanan', d: 'Wajib memilih belok, tidak boleh lurus.', bg: '#1565C0' },
+                { f: img('perintah', '3a'), c: '3A', n: 'Putar Balik Wajib', d: 'Wajib melakukan U-turn.', bg: '#1565C0' },
+                { f: img('perintah', '4a'), c: '4A', n: 'Jalur Khusus Sepeda', d: 'Sepeda wajib di jalur ini.', bg: '#1565C0' },
+                { f: img('perintah', '4b'), c: '4B', n: 'Jalur Khusus Bus', d: 'Hanya bus yang boleh di jalur ini.', bg: '#1565C0' },
+                { f: img('perintah', '4c'), c: '4C', n: 'Jalur Pejalan Kaki', d: 'Pejalan kaki wajib di jalur ini.', bg: '#1565C0' },
+                { f: img('perintah', '5a'), c: '5A', n: 'Kecepatan Minimum', d: 'Tidak boleh di bawah kecepatan ini.', bg: '#1565C0' },
+                { f: img('perintah', '6a'), c: '6A', n: 'Bundaran Wajib', d: 'Wajib mengelilingi bundaran.', bg: '#1565C0' }
+            ],
+            petunjuk: [
+                { f: img('petunjuk', '1p'), c: '1P', n: 'Jalan Satu Arah', d: 'Hanya satu arah yang diperbolehkan.', bg: '#1565C0' },
+                { f: img('petunjuk', '2p'), c: '2P', n: 'Arah yang Diperbolehkan', d: 'Menunjukkan arah boleh dilalui.', bg: '#1565C0' },
+                { f: img('petunjuk', '3p'), c: '3P', n: 'Jalur Kendaraan Lambat', d: 'Kendaraan lambat di jalur ini.', bg: '#1565C0' },
+                { f: img('petunjuk', '4p'), c: '4P', n: 'Area Parkir', d: 'Lokasi parkir terdekat.', bg: '#1565C0' },
+                { f: img('petunjuk', '5p'), c: '5P', n: 'Tempat Istirahat', d: 'Rest area terdekat.', bg: '#1565C0' },
+                { f: img('petunjuk', '6p'), c: '6P', n: 'Pom Bensin (SPBU)', d: 'Lokasi SPBU terdekat.', bg: '#1565C0' },
+                { f: img('petunjuk', '7p'), c: '7P', n: 'Rumah Sakit', d: 'Lokasi rumah sakit terdekat.', bg: '#1565C0' },
+                { f: img('petunjuk', '8p'), c: '8P', n: 'Kantor Polisi', d: 'Lokasi kantor polisi terdekat.', bg: '#1565C0' },
+                { f: img('petunjuk', '9p'), c: '9P', n: 'Halte Bus', d: 'Lokasi halte bus terdekat.', bg: '#1565C0' },
+                { f: img('petunjuk', '10p'), c: '10P', n: 'Tempat Ibadah', d: 'Lokasi tempat ibadah terdekat.', bg: '#1565C0' },
+                { f: img('petunjuk', '11p'), c: '11P', n: 'Bundaran', d: 'Ada bundaran di depan.', bg: '#1565C0' },
+                { f: img('petunjuk', '12p'), c: '12P', n: 'Terminal Bus', d: 'Lokasi terminal bus.', bg: '#1565C0' },
+                { f: img('petunjuk', '13p'), c: '13P', n: 'Stasiun Kereta Api', d: 'Lokasi stasiun KA terdekat.', bg: '#1565C0' },
+                { f: img('petunjuk', '14p'), c: '14P', n: 'Bandara', d: 'Arah menuju bandara.', bg: '#1565C0' },
+                { f: img('petunjuk', '15p'), c: '15P', n: 'Pelabuhan', d: 'Arah menuju pelabuhan.', bg: '#1565C0' }
+            ]
+        };
+
+        const CATS = [
+            { id: 'peringatan', name: 'Rambu Peringatan', icon: 'fa-triangle-exclamation', color: '#FF8F00' },
+            { id: 'larangan', name: 'Rambu Larangan', icon: 'fa-ban', color: '#D32F2F' },
+            { id: 'perintah', name: 'Rambu Perintah', icon: 'fa-circle-check', color: '#1565C0' },
+            { id: 'petunjuk', name: 'Rambu Petunjuk', icon: 'fa-circle-info', color: '#0D47A1' },
+            { id: 'keselamatan', name: 'Keselamatan Jalan', icon: 'fa-shield-halved', color: '#2E7D32' }
+        ];
+
+        // ==================== STATE ====================
+        const DEF = { cat: { peringatan: { bs: 0, st: 0 }, larangan: { bs: 0, st: 0 }, perintah: { bs: 0, st: 0 }, petunjuk: { bs: 0, st: 0 }, keselamatan: { bs: 0, st: 0 } }, ch: { bs: 0 }, set: { snd: true, mus: false, tmr: false }, lb: [] };
+        let GS = JSON.parse(JSON.stringify(DEF));
+        function save() { try { localStorage.setItem('tll', JSON.stringify(GS)) } catch (e) { } }
+        function load() { try { const s = localStorage.getItem('tll'); if (s) { const p = JSON.parse(s); GS = { ...JSON.parse(JSON.stringify(DEF)), ...p }; GS.cat = { ...DEF.cat, ...p.cat }; GS.set = { ...DEF.set, ...p.set }; if (!Array.isArray(GS.lb)) GS.lb = [] } } catch (e) { } }
+        function addLB(cat, sc, st) { GS.lb.push({ d: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }), c: cat === 'challenge' ? 'Tantangan' : CATS.find(c => c.id === cat)?.name || cat, sc, st, t: Date.now() }); GS.lb.sort((a, b) => b.sc - a.sc); GS.lb = GS.lb.slice(0, 20); save() }
+
+        // ==================== NAVIGASI ====================
+        let curScr = 's-menu';
+        function nav(id) { AU.init(); AU.clk(); document.querySelectorAll('.scr').forEach(s => s.classList.remove('on')); const t = document.getElementById(id); if (t) requestAnimationFrame(() => { t.classList.add('on'); t.scrollTop = 0 }); curScr = id }
+
+        // ==================== MODAL & TOAST ====================
+        let mcb = null;
+        function cshow(txt, cb) { document.getElementById('cmtxt').textContent = txt; document.getElementById('cmod').classList.add('v'); mcb = cb; document.getElementById('cmcfm').onclick = () => { ccls(); if (mcb) mcb() } }
+        function ccls() { document.getElementById('cmod').classList.remove('v'); mcb = null }
+        function toast(m) { const t = document.getElementById('tst'); t.textContent = m; t.classList.add('v'); setTimeout(() => t.classList.remove('v'), 2200) }
+
+        // ==================== QUIZ ====================
+        let QZ = { cat: null, qs: [], ci: 0, sc: 0, sk: 0, ms: 0, cc: 0, cnc: 0, ans: false, ti: null, tl: 0, isch: false };
+
+        function startQ(catId, isCh = false) {
+            AU.init();
+            if (isCh) { let a = []; Object.keys(QS).forEach(k => { QS[k].forEach((q, i) => a.push({ ...q, cid: k, oi: i })) }); shuf(a); QZ = { cat: 'challenge', qs: a, ci: 0, sc: 0, sk: 0, ms: 0, cc: 0, cnc: 0, ans: false, ti: null, tl: 0, isch: true } }
+            else { let qs = QS[catId].map((q, i) => ({ ...q, cid: catId, oi: i })); shuf(qs); QZ = { cat: catId, qs, ci: 0, sc: 0, sk: 0, ms: 0, cc: 0, cnc: 0, ans: false, ti: null, tl: 0, isch: false } }
+            nav('s-quiz'); renderQ()
+        }
+
+        function renderQ() {
+            const q = QZ.qs[QZ.ci], tot = QZ.qs.length; QZ.ans = false;
+            document.querySelector('#qip span').textContent = `${QZ.ci + 1}/${tot}`;
+            document.querySelector('#qis span').textContent = QZ.sc;
+            document.getElementById('qs-ok').textContent = QZ.cc;
+            document.getElementById('qs-no').textContent = QZ.cnc;
+            document.getElementById('qs-sk').textContent = QZ.sk;
+            const sk = document.getElementById('qik');
+            if (QZ.sk >= 2) { sk.style.display = 'flex'; sk.querySelector('.sk').innerHTML = `<i class="fa-solid fa-fire"></i> x${QZ.sk}` } else sk.style.display = 'none';
+            document.getElementById('qpf').style.width = `${(QZ.ci / tot) * 100}%`;
+            const ut = QZ.isch || GS.set.tmr, tb = document.getElementById('qtb'), tf = document.getElementById('qtf');
+            if (ut) { tb.style.display = 'block'; QZ.tl = QZ.isch ? 15 : 20; tf.style.width = '100%'; tf.style.backgroundColor = 'var(--suc)'; clearInterval(QZ.ti); const tt = QZ.tl; QZ.ti = setInterval(() => { QZ.tl -= .1; if (QZ.tl <= 0) { QZ.tl = 0; clearInterval(QZ.ti); if (!QZ.ans) timeUp() } const p = (QZ.tl / tt) * 100; tf.style.width = p + '%'; tf.style.backgroundColor = p > 50 ? 'var(--suc)' : p > 25 ? 'var(--acc)' : 'var(--dng)' }, 100) } else tb.style.display = 'none';
+
+            const sa = document.getElementById('qsa');
+            if (q.img) {
+                sa.innerHTML = `<img src="${q.img}" alt="${q.code || 'Rambu'}" onerror="imgErr(this,'${q.cat}','${q.code || '?'}')">`;
+                sa.style.display = 'flex';
+            }
+            else if (q.icon) { sa.innerHTML = `<i class="fa-solid ${q.icon} qsi" style="color:${q.fb}"></i>`; sa.style.display = 'flex' }
+            else { sa.innerHTML = ''; sa.style.display = 'none' }
+
+            document.getElementById('qqt').textContent = q.q;
+            const L = ['A', 'B', 'C', 'D'];
+            document.getElementById('qop').innerHTML = q.o.map((o, i) => `<button class="ob" onclick="selAns(${i})"><span class="ol">${L[i]}</span><span>${o}</span></button>`).join('');
+            document.getElementById('qex').classList.remove('v');
+            document.getElementById('qnxt').classList.remove('v');
+            document.getElementById('qmasc').innerHTML = mascot('think', 60)
+        }
+
+        function selAns(i) {
+            if (QZ.ans) return; QZ.ans = true; clearInterval(QZ.ti);
+            const q = QZ.qs[QZ.ci], ok = i === q.c, btns = document.querySelectorAll('.ob');
+            btns.forEach(b => b.classList.add('dis')); btns[q.c].classList.add('ok');
+            if (ok) { QZ.sk++; if (QZ.sk > QZ.ms) QZ.ms = QZ.sk; QZ.cc++; let p = 100; if (QZ.sk >= 3) p += 25; if (QZ.sk >= 5) p += 25; if (document.getElementById('qtb').style.display === 'block') p += Math.round(QZ.tl * 2); QZ.sc += p; document.querySelector('#qis span').textContent = QZ.sc; document.getElementById('qs-ok').textContent = QZ.cc; document.getElementById('qs-sk').textContent = QZ.sk; AU.ok(); CF.burst(innerWidth / 2, innerHeight / 2, 50); showSP(`+${p}`); document.getElementById('qmasc').innerHTML = mascot('happy', 60) }
+            else { btns[i].classList.add('no'); QZ.sk = 0; QZ.cnc++; document.getElementById('qs-no').textContent = QZ.cnc; document.getElementById('qs-sk').textContent = QZ.sk; AU.no(); document.getElementById('qmasc').innerHTML = mascot('sad', 60); document.getElementById('qik').style.display = 'none' }
+            const ex = document.getElementById('qex'); ex.querySelector('span').textContent = q.e; ex.classList.add('v');
+            const nb = document.getElementById('qnxt'); nb.classList.add('v'); nb.innerHTML = QZ.ci >= QZ.qs.length - 1 ? 'Lihat Hasil <i class="fa-solid fa-flag-checkered"></i>' : 'Lanjut <i class="fa-solid fa-arrow-right"></i>'
+        }
+
+        function timeUp() {
+            QZ.ans = true; QZ.sk = 0; QZ.cnc++; document.getElementById('qs-no').textContent = QZ.cnc; document.getElementById('qs-sk').textContent = 0;
+            const q = QZ.qs[QZ.ci], btns = document.querySelectorAll('.ob');
+            btns.forEach(b => b.classList.add('dis')); btns[q.c].classList.add('ok');
+            AU.no(); document.getElementById('qmasc').innerHTML = mascot('sad', 60); document.getElementById('qik').style.display = 'none';
+            const ex = document.getElementById('qex'); ex.querySelector('span').textContent = 'Waktu habis! ' + q.e; ex.classList.add('v');
+            const nb = document.getElementById('qnxt'); nb.classList.add('v'); nb.innerHTML = QZ.ci >= QZ.qs.length - 1 ? 'Lihat Hasil <i class="fa-solid fa-flag-checkered"></i>' : 'Lanjut <i class="fa-solid fa-arrow-right"></i>'
+        }
+
+        function nxtQ() { AU.clk(); QZ.ci++; if (QZ.ci >= QZ.qs.length) finQ(); else renderQ() }
+
+        function finQ() {
+            clearInterval(QZ.ti); const tot = QZ.qs.length, ok = QZ.cc, pct = ok / tot;
+            let st = pct >= 1 ? 3 : pct >= .8 ? 2 : pct >= .6 ? 1 : 0;
+            if (QZ.isch) { if (QZ.sc > GS.ch.bs) GS.ch.bs = QZ.sc } else { const c = GS.cat[QZ.cat]; if (QZ.sc > c.bs) c.bs = QZ.sc; if (st > c.st) c.st = st }
+            addLB(QZ.cat, QZ.sc, st); save();
+            document.getElementById('rlab').textContent = QZ.isch ? 'Tantangan Selesai!' : 'Level Selesai!';
+            document.getElementById('rsc').textContent = QZ.sc;
+            document.getElementById('rdet').textContent = `${ok} benar dari ${tot} soal — Salah: ${QZ.cnc} — Streak terbaik: ${QZ.ms}`;
+            document.getElementById('rsts').querySelectorAll('.st').forEach((s, i) => s.classList.toggle('ed', i < st));
+            document.getElementById('rmasc').innerHTML = mascot(st >= 2 ? 'exc' : 'happy', 100);
+            nav('s-res');
+            if (st >= 2) { AU.win(); setTimeout(() => { CF.burst(innerWidth / 2, innerHeight / 3, 80); if (st === 3) { setTimeout(() => CF.burst(innerWidth * .3, innerHeight * .4, 50), 200); setTimeout(() => CF.burst(innerWidth * .7, innerHeight * .4, 50), 400) } }, 300) } else AU.win()
+        }
+
+        function replay() { AU.clk(); startQ(QZ.cat, QZ.isch) }
+        function cfmQuit() { cshow('Yakin ingin keluar dari quiz? Progres quiz ini tidak disimpan.', () => { clearInterval(QZ.ti); nav('s-lvl'); renderLvl() }) }
+        function showSP(t) { const e = document.createElement('div'); e.className = 'sp'; e.textContent = t; e.style.left = (innerWidth / 2 - 30) + 'px'; e.style.top = (innerHeight / 2 - 30) + 'px'; document.body.appendChild(e); setTimeout(() => e.remove(), 850) }
+
+        // ==================== LEVEL SELECT ====================
+        const LVL_ORDER = ['peringatan', 'larangan', 'perintah', 'petunjuk', 'keselamatan'];
+        function isUnl(id) { const i = LVL_ORDER.indexOf(id); if (i <= 0) return true; return GS.cat[LVL_ORDER[i - 1]] && GS.cat[LVL_ORDER[i - 1]].st >= 1 }
+        function renderLvl() {
+            const g = document.getElementById('lvlg'); let h = '';
+            CATS.forEach(c => {
+                const u = isUnl(c.id), d = GS.cat[c.id], tq = QS[c.id] ? QS[c.id].length : 0;
+                const ss = [0, 1, 2].map(i => `<i class="fa-solid fa-star ${i < d.st ? '' : 'e'}"></i>`).join(' ');
+                h += `<div class="lc ${u ? '' : 'lk'}" ${u ? `onclick="startQ('${c.id}')"` : ''}><div class="li" style="color:${c.color}"><i class="fa-solid ${c.icon}"></i></div><div class="ln">${c.name}</div><div class="lp">${tq} soal — Skor terbaik: ${d.bs}</div><div class="ls">${ss}</div></div>`
+            });
+            const ad = LVL_ORDER.every(c => GS.cat[c]?.st >= 1);
+            const cd = GS.ch; const cst = cd.bs >= 3000 ? 3 : cd.bs >= 2000 ? 2 : cd.bs >= 1000 ? 1 : 0;
+            const css = [0, 1, 2].map(i => `<i class="fa-solid fa-star ${i < cst ? '' : 'e'}"></i>`).join(' ');
+            const totQ = LVL_ORDER.reduce((s, c) => s + (QS[c]?.length || 0), 0);
+            h += `<div class="lc ch ${ad ? '' : 'lk'}" ${ad ? 'onclick="startQ(null,true)"' : ''}><div class="li" style="color:#fff"><i class="fa-solid fa-bolt"></i></div><div class="ln">Mode Tantangan</div><div class="lp">Semua ${totQ} soal dengan timer 15 detik — Skor terbaik: ${cd.bs}</div><div class="ls">${css}</div></div>`;
+            g.innerHTML = h
+        }
+
+        // ==================== GALERI ====================
+        let galFilter = 'semua';
+        let galItems = [];
+        function renderGal() {
+            const tabs = document.getElementById('gtabs');
+            const cats = [{ id: 'semua', name: 'Semua', icon: 'fa-border-all', color: 'var(--pri)' }, ...CATS.filter(c => c.id !== 'keselamatan')];
+            tabs.innerHTML = cats.map(c => `<button class="gtab ${galFilter === c.id ? 'on' : ''}" onclick="galFilter='${c.id}';renderGal()"><i class="fa-solid ${c.icon}" style="margin-right:3px;color:${galFilter === c.id ? '#fff' : c.color}"></i>${c.name}</button>`).join('');
+            const grid = document.getElementById('ggrid'); galItems = [];
+            if (galFilter === 'semua') { Object.keys(GAL).forEach(k => GAL[k].forEach(s => galItems.push({ ...s, cat: k }))) } else { GAL[galFilter]?.forEach(s => galItems.push({ ...s, cat: galFilter })) }
+            grid.innerHTML = galItems.map((s, i) => `<div class="gc" onclick="openGMod(${i})"><div class="gc-img"><img src="${s.f}" alt="${s.n}" onerror="imgErr(this,'${s.cat}','${s.c}')"></div><div class="gc-info"><div class="gn">${s.n}</div><div class="gcode">${s.c}</div></div></div>`).join('')
+        }
+
+        function openGMod(i) {
+            const s = galItems[i]; if (!s) return;
+            const catInfo = CATS.find(c => c.id === s.cat);
+            document.getElementById('gm-img').innerHTML = `<img src="${s.f}" alt="${s.n}" onerror="this.onerror=null;this.style.display='none';this.parentNode.innerHTML=signFB('${s.cat}','${s.c}')">`;
+            const badge = document.getElementById('gm-badge');
+            badge.textContent = catInfo ? catInfo.name : 'Rambu'; badge.style.background = catInfo ? catInfo.color : 'var(--pri)'; badge.style.color = '#fff';
+            document.getElementById('gm-name').textContent = s.n;
+            document.getElementById('gm-code').textContent = 'Kode: ' + s.c;
+            document.getElementById('gm-desc').textContent = s.d;
+            document.getElementById('gmod').classList.add('v')
+        }
+        function gmodCls() { document.getElementById('gmod').classList.remove('v') }
+
+        // ==================== LEADERBOARD ====================
+        function renderLB() {
+            const l = document.getElementById('lblr');
+            if (!GS.lb.length) { l.innerHTML = '<div class="lbe"><i class="fa-solid fa-trophy" style="font-size:2rem;display:block;margin-bottom:10px;color:#CFD8DC"></i>Belum ada skor tersimpan.<br>Mainkan quiz untuk melihat skor di sini!</div>'; return }
+            l.innerHTML = GS.lb.map((e, i) => {
+                const rc = i === 0 ? 'g' : i === 1 ? 'sv' : i === 2 ? 'bz' : '';
+                const si2 = [0, 1, 2].map(s => `<i class="fa-solid fa-star" style="color:${s < e.st ? 'var(--acc)' : '#CFD8DC'};font-size:.68rem"></i>`).join(' ');
+                return `<div class="lbi"><div class="lbr ${rc}">${i + 1}</div><div class="lbnfo"><div>${e.c}</div><div>${e.d} ${si2}</div></div><div class="lbsc">${e.sc}</div></div>`
+            }).join('')
+        }
+
+        // ==================== SETTINGS ====================
+        function renderSet() {
+            document.getElementById('slsl').innerHTML = `
+<div class="sli"><span><i class="fa-solid fa-volume-high" style="margin-right:6px;color:var(--pri)"></i> Efek Suara</span><div class="tg ${GS.set.snd ? 'on' : ''}" onclick="tglSet('snd',this)"></div></div>
+<div class="sli"><span><i class="fa-solid fa-clock" style="margin-right:6px;color:var(--warn)"></i> Timer Quiz</span><div class="tg ${GS.set.tmr ? 'on' : ''}" onclick="tglSet('tmr',this)"></div></div>
+<div style="margin-top:10px;padding:11px 13px;background:#E8F0FE;border:2px solid var(--brd);border-radius:9px;font-size:.78rem;color:var(--mut);font-weight:700;line-height:1.5">
+<i class="fa-solid fa-circle-info" style="color:var(--pri);margin-right:4px"></i><strong>Timer:</strong> Jika aktif, tiap soal batas 20 detik. Mode Tantangan selalu pakai timer 15 detik.</div>
+<div style="margin-top:8px;padding:11px 13px;background:#FFF3E0;border:2px solid var(--brd);border-radius:9px;font-size:.78rem;color:var(--mut);font-weight:700;line-height:1.5">
+<i class="fa-solid fa-folder-open" style="color:var(--acc);margin-right:4px"></i><strong>Folder Gambar:</strong> Pastikan folder <code>gudang/rambu-peringatan/</code>, <code>gudang/rambu-larangan/</code>, <code>gudang/rambu-perintah/</code>, dan <code>gudang/rambu-petunjuk/</code> sudah berisi file gambar rambu. Jika gambar tidak ditemukan, akan tampil rambu pengganti berupa kode.</div>`
+        }
+        function tglSet(k, el) { AU.init(); AU.clk(); GS.set[k] = !GS.set[k]; el.classList.toggle('on', GS.set[k]); save(); if (k === 'snd') AU.snd = GS.set.snd }
+        function cfmReset() { cshow('Yakin hapus semua progres? Skor, bintang, dan leaderboard akan direset permanen.', () => { GS = JSON.parse(JSON.stringify(DEF)); save(); toast('Semua progres telah dihapus'); renderSet() }) }
+
+        // ==================== START / CONTINUE ====================
+        function doStart() {
+            for (const id of LVL_ORDER) { if (!isUnl(id)) continue; if (GS.cat[id].st < 3) { startQ(id); return } }
+            if (LVL_ORDER.every(c => GS.cat[c].st >= 3)) { startQ(null, true) } else { nav('s-lvl'); renderLvl() }
+        }
+
+        // ==================== UTILITAS ====================
+        function shuf(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0;[a[i], a[j]] = [a[j], a[i]] } return a }
+
+        // ==================== INISIALISASI ====================
+        document.addEventListener('DOMContentLoaded', () => {
+            load(); CF.init(); AU.snd = GS.set.snd; AU.mus = GS.set.mus;
+            document.getElementById('mmasc').innerHTML = mascot('happy', 110);
+            renderLvl();
+            const ua = () => { AU.init(); document.removeEventListener('click', ua); document.removeEventListener('touchstart', ua) };
+            document.addEventListener('click', ua); document.addEventListener('touchstart', ua);
+            document.addEventListener('keydown', e => { if (e.key === 'Escape') { if (document.getElementById('gmod').classList.contains('v')) { gmodCls() } else if (document.getElementById('cmod').classList.contains('v')) { ccls() } else if (curScr === 's-quiz') { cfmQuit() } else if (curScr !== 's-menu') { nav('s-menu') } } });
+            document.getElementById('gmod').addEventListener('click', e => { if (e.target.id === 'gmod') gmodCls() });
+        });
+    </script>
+</body>
+
+</html>

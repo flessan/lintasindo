@@ -1,0 +1,1463 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Motor Tes Mengemudi - Blue Cartoon Pop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Nunito:wght@400;700;900&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            user-select: none;
+            touch-action: none;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0984e3;
+            overflow: hidden;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        #hud {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            z-index: 20;
+            pointer-events: none;
+        }
+
+        .hud-box {
+            background: rgba(255, 255, 255, 0.92);
+            border: 3px solid #1e272e;
+            border-radius: 10px;
+            padding: 5px 12px;
+            font-weight: 900;
+            font-size: 13px;
+            color: #1e272e;
+            box-shadow: 3px 3px 0 #1e272e;
+            white-space: nowrap;
+            transition: background 0.3s;
+        }
+
+        .hud-box span {
+            color: #0984e3;
+        }
+
+        .hud-box.danger {
+            background: rgba(255, 118, 117, 0.92);
+        }
+
+        .hud-box.danger span {
+            color: #fff;
+        }
+
+        .hud-box.danger {
+            animation: hud-blink 0.5s infinite alternate;
+        }
+
+        @keyframes hud-blink {
+            to {
+                background: rgba(214, 48, 49, 0.95);
+            }
+        }
+
+        #offtrack-warning {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 230px;
+            height: 30px;
+            background: rgba(0, 0, 0, 0.65);
+            border: 3px solid #d63031;
+            border-radius: 10px;
+            z-index: 20;
+            overflow: hidden;
+            display: none;
+        }
+
+        #offtrack-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #e17055, #d63031);
+            border-radius: 6px;
+            transition: width 0.1s;
+        }
+
+        #offtrack-warning .warn-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            font-weight: 900;
+            font-size: 11px;
+            text-shadow: 1px 1px 0 #000;
+            letter-spacing: 1px;
+        }
+
+        #joystick-base {
+            width: 110px;
+            height: 110px;
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 50%;
+            position: fixed;
+            display: none;
+            border: 3px solid rgba(255, 255, 255, 0.35);
+            z-index: 30;
+            backdrop-filter: blur(2px);
+        }
+
+        #joystick-knob {
+            width: 44px;
+            height: 44px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            position: absolute;
+            left: 33px;
+            top: 33px;
+            border: 3px solid rgba(0, 0, 0, 0.15);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+        }
+
+        #start-screen {
+            background: rgba(9, 132, 227, 0.92);
+        }
+
+        #win-screen {
+            background: rgba(0, 184, 148, 0.92);
+            display: none;
+        }
+
+        #fail-screen {
+            background: rgba(45, 52, 54, 0.94);
+            display: none;
+        }
+
+        .overlay h1 {
+            font-family: 'Bungee', cursive;
+            font-size: clamp(28px, 7vw, 44px);
+            color: #ffeaa7;
+            text-shadow: 4px 4px 0 #1e272e, 0 0 20px rgba(255, 234, 167, 0.3);
+            margin-bottom: 6px;
+        }
+
+        .overlay h2 {
+            font-family: 'Bungee', cursive;
+            font-size: clamp(20px, 5vw, 32px);
+            color: #00b894;
+            text-shadow: 3px 3px 0 #1e272e;
+        }
+
+        #fail-screen h2 {
+            color: #ff7675;
+            font-size: clamp(26px, 6vw, 40px);
+            text-shadow: 3px 3px 0 #1e272e, 0 0 30px rgba(255, 118, 117, 0.4);
+            animation: fail-pulse 0.8s ease-in-out infinite alternate;
+        }
+
+        #fail-screen h1 {
+            color: #ffeaa7;
+            font-size: clamp(34px, 9vw, 56px);
+            text-shadow: 4px 4px 0 #1e272e, 0 0 30px rgba(255, 234, 167, 0.3);
+        }
+
+        @keyframes fail-pulse {
+            from {
+                transform: scale(1);
+                opacity: 0.9;
+            }
+
+            to {
+                transform: scale(1.06);
+                opacity: 1;
+            }
+        }
+
+        .overlay p {
+            color: #dfe6e9;
+            font-size: 15px;
+            font-weight: 700;
+            margin: 10px 0 24px;
+            text-align: center;
+            padding: 0 24px;
+            line-height: 1.6;
+        }
+
+        .overlay p strong {
+            color: #ffeaa7;
+        }
+
+        #fail-screen p {
+            color: #b2bec3;
+        }
+
+        #fail-screen p strong {
+            color: #ff7675;
+        }
+
+        .pop-btn {
+            font-family: 'Bungee', cursive;
+            font-size: 20px;
+            color: #fff;
+            background: #d63031;
+            border: 4px solid #1e272e;
+            border-radius: 14px;
+            padding: 12px 44px;
+            cursor: pointer;
+            box-shadow: 4px 4px 0 #1e272e;
+            transition: transform 0.1s;
+        }
+
+        .pop-btn:hover {
+            transform: scale(1.06);
+        }
+
+        .pop-btn:active {
+            transform: scale(0.94);
+            box-shadow: 2px 2px 0 #1e272e;
+        }
+
+        .pop-btn.green {
+            background: #00b894;
+        }
+
+        .pop-btn.orange {
+            background: #e17055;
+        }
+
+        .controls-hint {
+            display: flex;
+            gap: 6px;
+            margin-top: 16px;
+            align-items: center;
+        }
+
+        .controls-hint span {
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            padding: 4px 10px;
+            color: #dfe6e9;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .fail-x {
+            width: 80px;
+            height: 80px;
+            border: 6px solid #ff7675;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            animation: fail-x-in 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+
+        .fail-x::before,
+        .fail-x::after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 6px;
+            background: #ff7675;
+            border-radius: 3px;
+        }
+
+        .fail-x::before {
+            transform: rotate(45deg);
+        }
+
+        .fail-x::after {
+            transform: rotate(-45deg);
+        }
+
+        @keyframes fail-x-in {
+            from {
+                transform: scale(0) rotate(-180deg);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        .rule-box {
+            background: rgba(0, 0, 0, 0.25);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 10px 18px;
+            margin: 8px 0 18px;
+            text-align: left;
+        }
+
+        .rule-box div {
+            color: #dfe6e9;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 3px 0;
+            line-height: 1.5;
+        }
+
+        .rule-box .icon-r {
+            color: #ff7675;
+            margin-right: 6px;
+        }
+
+        .rule-box .icon-g {
+            color: #55efc4;
+            margin-right: 6px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <audio id="myBGM" src="../../../gudang/tio/cok.mp3" loop></audio>
+
+    <script>
+        // Fungsi untuk memutar audio setelah interaksi user
+        function startBGM() {
+            const audio = document.getElementById('myBGM');
+            audio.play().catch(error => {
+                console.log("Autoplay diblokir, menunggu klik user.");
+            });
+            // Hapus event listener setelah musik berhasil jalan sekali
+            document.removeEventListener('click', startBGM);
+            document.removeEventListener('touchstart', startBGM);
+        }
+
+        // Jalankan musik begitu user klik atau tap di mana saja di halaman ini
+        document.addEventListener('click', startBGM);
+        document.addEventListener('touchstart', startBGM);
+    </script>
+
+    <canvas id="gameCanvas"></canvas>
+
+    <div id="hud" style="display:none;">
+        <div class="hud-box" id="timer-box">Sisa Waktu: <span id="timer">69420</span>s</div>
+        <div class="hud-box">Checkpoint: <span id="cp-count">0</span>/4</div>
+    </div>
+
+    <div id="offtrack-warning">
+        <div id="offtrack-fill"></div>
+        <span class="warn-label">KELUAR JALUR!</span>
+    </div>
+
+    <div id="joystick-base">
+        <div id="joystick-knob"></div>
+    </div>
+
+    <div id="start-screen" class="overlay">
+        <h1>MOTOR TES</h1>
+        <h2 style="color:#ffeaa7; font-size:clamp(14px,3vw,18px); margin-bottom:8px;">Ujian Praktik SIM</h2>
+        <div class="rule-box">
+            <div><span class="icon-r">✘</span> Kena cone = <strong style="color:#ff7675">GAGAL</strong></div>
+            <div><span class="icon-r">✘</span> Keluar trek 3 detik = <strong style="color:#ff7675">GAGAL</strong></div>
+            <div><span class="icon-r">✘</span> Waktu habis = <strong style="color:#ff7675">GAGAL</strong></div>
+            <div><span class="icon-g">✔</span> Lewati <strong style="color:#55efc4">4 checkpoint</strong> lalu FINISH
+            </div>
+            <div><span class="icon-g">⚠</span> Hati-hati <strong style="color:#ffeaa7">/licin/</strong> di jalur!</div>
+        </div>
+        <button class="pop-btn" id="start-btn">MULAI UJIAN</button>
+        <div class="controls-hint">
+            <span>Sentuh & geser</span>
+            <span>atau WASD</span>
+        </div>
+    </div>
+
+    <div id="win-screen" class="overlay">
+        <h2>LULUS!</h2>
+        <h1>TES 1 BERHASIL</h1>
+        <p id="win-text"></p>
+        <button class="pop-btn green" onclick="goToNextPage()" id="next-btn">LANJUT</button>
+        <button class="pop-btn green" onclick="location.reload()" style="margin-top:8px; ">ULANGI</button>
+    </div>
+
+    <div id="fail-screen" class="overlay">
+        <div class="fail-x"></div>
+        <h2>KETABRAK!</h2>
+        <h1>COBA LAGI</h1>
+        <p id="fail-text"></p>
+        <button class="pop-btn orange" onclick="location.reload()">COBA LAGI</button>
+    </div>
+
+    <script>
+        /* ============================================
+           DATA PEMAIN & NAVIGASI
+           ============================================ */
+        const urlParams = new URLSearchParams(window.location.search);
+        const playerName = urlParams.get('tio') || 'Warga';
+
+        function goToNextPage() {
+            window.location.href = '../mandalika?tio=' + encodeURIComponent(playerName);
+        }
+
+        /* ============================================
+           SETUP CANVAS
+           ============================================ */
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resize();
+        window.addEventListener('resize', resize);
+
+        /* ============================================
+           KONSTANTA DUNIA
+           ============================================ */
+        const WORLD_W = 1000;
+        const WORLD_H = 3200;
+        const TRACK_W = 180;
+        const HALF_TRACK = TRACK_W / 2;
+        const CURB_W = 14;
+
+        /* ============================================
+           DEFINISI TREK
+           ============================================ */
+        const controlPoints = [
+            { x: 500, y: 2950 },
+            { x: 500, y: 2700 },
+            { x: 500, y: 2500 },
+            { x: 560, y: 2320 },
+            { x: 700, y: 2180 },
+            { x: 770, y: 2000 },
+            { x: 770, y: 1800 },
+            { x: 770, y: 1600 },
+            { x: 700, y: 1400 },
+            { x: 560, y: 1250 },
+            { x: 430, y: 1100 },
+            { x: 350, y: 900 },
+            { x: 380, y: 700 },
+            { x: 520, y: 530 },
+            { x: 700, y: 420 },
+            { x: 770, y: 270 },
+            { x: 770, y: 100 },
+        ];
+
+        function catmullRom(p0, p1, p2, p3, t) {
+            const t2 = t * t, t3 = t2 * t;
+            return {
+                x: 0.5 * ((2 * p1.x) + (-p0.x + p2.x) * t + (2 * p0.x - 5 * p1.x + 4 * p2.x - p3.x) * t2 + (-p0.x + 3 * p1.x - 3 * p2.x + p3.x) * t3),
+                y: 0.5 * ((2 * p1.y) + (-p0.y + p2.y) * t + (2 * p0.y - 5 * p1.y + 4 * p2.y - p3.y) * t2 + (-p0.y + 3 * p1.y - 3 * p2.y + p3.y) * t3),
+            };
+        }
+
+        function generateDenseCenterline() {
+            const pts = controlPoints;
+            const dense = [];
+            for (let i = 0; i < pts.length - 1; i++) {
+                const p0 = pts[Math.max(0, i - 1)];
+                const p1 = pts[i];
+                const p2 = pts[Math.min(pts.length - 1, i + 1)];
+                const p3 = pts[Math.min(pts.length - 1, i + 2)];
+                const steps = 24;
+                for (let j = 0; j < steps; j++) {
+                    dense.push(catmullRom(p0, p1, p2, p3, j / steps));
+                }
+            }
+            dense.push(pts[pts.length - 1]);
+            return dense;
+        }
+
+        const denseCenter = generateDenseCenterline();
+
+        function createSmoothPath() {
+            const path = new Path2D();
+            const pts = controlPoints;
+            path.moveTo(pts[0].x, pts[0].y);
+            for (let i = 1; i < pts.length - 1; i++) {
+                const mx = (pts[i].x + pts[i + 1].x) / 2;
+                const my = (pts[i].y + pts[i + 1].y) / 2;
+                path.quadraticCurveTo(pts[i].x, pts[i].y, mx, my);
+            }
+            path.lineTo(pts[pts.length - 1].x, pts[pts.length - 1].y);
+            return path;
+        }
+        const trackPath = createSmoothPath();
+
+        /* ============================================
+           OBJEK GAME - RINTANGAN LEBIH MENANTANG
+           ============================================ */
+
+        /* Cone rintangan - lebih banyak & posisi lebih sulit */
+        const cones = [
+            // Awal - cone pengingat
+            { x: 540, y: 2670, hit: false, fallAng: 0, alpha: 1 },
+            { x: 460, y: 2590, hit: false, fallAng: 0, alpha: 1 },
+
+            // Gerbang sempat sebelum belokan kanan
+            { x: 470, y: 2460, hit: false, fallAng: 0, alpha: 1 },
+            { x: 540, y: 2460, hit: false, fallAng: 0, alpha: 1 },
+
+            // Belokan kanan - cone di tikungan dalam
+            { x: 640, y: 2340, hit: false, fallAng: 0, alpha: 1 },
+            { x: 700, y: 2240, hit: false, fallAng: 0, alpha: 1 },
+            { x: 740, y: 2160, hit: false, fallAng: 0, alpha: 1 },
+            { x: 740, y: 2080, hit: false, fallAng: 0, alpha: 1 },
+
+            // SLALOM KETAT - 9 cone zigzag rapat
+            { x: 720, y: 1940, hit: false, fallAng: 0, alpha: 1 },
+            { x: 830, y: 1890, hit: false, fallAng: 0, alpha: 1 },
+            { x: 720, y: 1840, hit: false, fallAng: 0, alpha: 1 },
+            { x: 830, y: 1790, hit: false, fallAng: 0, alpha: 1 },
+            { x: 720, y: 1740, hit: false, fallAng: 0, alpha: 1 },
+            { x: 830, y: 1690, hit: false, fallAng: 0, alpha: 1 },
+            { x: 720, y: 1640, hit: false, fallAng: 0, alpha: 1 },
+            { x: 830, y: 1590, hit: false, fallAng: 0, alpha: 1 },
+            { x: 720, y: 1540, hit: false, fallAng: 0, alpha: 1 },
+
+            // Belokan kiri - cone rapat
+            { x: 660, y: 1370, hit: false, fallAng: 0, alpha: 1 },
+            { x: 580, y: 1240, hit: false, fallAng: 0, alpha: 1 },
+            { x: 500, y: 1120, hit: false, fallAng: 0, alpha: 1 },
+            { x: 440, y: 1020, hit: false, fallAng: 0, alpha: 1 },
+
+            // S-CURVE - cone di setiap lengkung
+            { x: 400, y: 960, hit: false, fallAng: 0, alpha: 1 },
+            { x: 320, y: 870, hit: false, fallAng: 0, alpha: 1 },
+            { x: 380, y: 790, hit: false, fallAng: 0, alpha: 1 },
+            { x: 440, y: 710, hit: false, fallAng: 0, alpha: 1 },
+            { x: 510, y: 630, hit: false, fallAng: 0, alpha: 1 },
+
+            // Lengkung terakhir menuju finish
+            { x: 600, y: 520, hit: false, fallAng: 0, alpha: 1 },
+            { x: 660, y: 460, hit: false, fallAng: 0, alpha: 1 },
+            { x: 730, y: 380, hit: false, fallAng: 0, alpha: 1 },
+            { x: 740, y: 290, hit: false, fallAng: 0, alpha: 1 },
+            { x: 720, y: 210, hit: false, fallAng: 0, alpha: 1 },
+        ];
+
+        /* Minyak licin di jalur - membuat motor tergelincir */
+        const oilSlicks = [
+            { x: 770, y: 1970, radius: 22 },
+            { x: 680, y: 1400, radius: 18 },
+            { x: 360, y: 830, radius: 20 },
+            { x: 660, y: 440, radius: 16 },
+        ];
+
+        /* Checkpoint */
+        const checkpoints = [
+            { x: 500, y: 2500, passed: false, id: 1 },
+            { x: 770, y: 1800, passed: false, id: 2 },
+            { x: 350, y: 900, passed: false, id: 3 },
+            { x: 520, y: 530, passed: false, id: 4 },
+        ];
+
+        /* Pohon dekoratif */
+        const trees = [];
+        (function generateTrees() {
+            const minDist = HALF_TRACK + 40;
+            for (let i = 0; i < 55; i++) {
+                let attempts = 0, x, y, valid;
+                do {
+                    x = 40 + Math.random() * (WORLD_W - 80);
+                    y = 40 + Math.random() * (WORLD_H - 80);
+                    valid = true;
+                    for (const cp of denseCenter) {
+                        if ((x - cp.x) ** 2 + (y - cp.y) ** 2 < minDist * minDist) {
+                            valid = false; break;
+                        }
+                    }
+                    attempts++;
+                } while (!valid && attempts < 30);
+                if (valid) {
+                    trees.push({
+                        x, y,
+                        size: 14 + Math.random() * 16,
+                        green: ['#00b894', '#00cec9', '#55efc4', '#81ecec'][Math.floor(Math.random() * 4)],
+                    });
+                }
+            }
+        })();
+
+        /* Bunga dekoratif */
+        const flowers = [];
+        (function generateFlowers() {
+            const colors = ['#fd79a8', '#ffeaa7', '#a29bfe', '#fab1a0', '#74b9ff'];
+            for (let i = 0; i < 80; i++) {
+                let x = 30 + Math.random() * (WORLD_W - 60);
+                let y = 30 + Math.random() * (WORLD_H - 60);
+                let onTrack = false;
+                for (const cp of denseCenter) {
+                    if ((x - cp.x) ** 2 + (y - cp.y) ** 2 < (HALF_TRACK + 10) ** 2) {
+                        onTrack = true; break;
+                    }
+                }
+                if (!onTrack) {
+                    flowers.push({ x, y, color: colors[Math.floor(Math.random() * colors.length)], size: 3 + Math.random() * 3 });
+                }
+            }
+        })();
+
+        /* ============================================
+           STATE PEMAIN
+           ============================================ */
+        let player = {
+            x: 500, y: 2900,
+            vx: 0, vy: 0,
+            angle: -Math.PI / 2,
+            onTrack: true,
+            onOil: false,
+        };
+
+        /* ============================================
+           KAMERA
+           ============================================ */
+        let camera = { x: 0, y: 0 };
+
+        /* ============================================
+           STATE GAME
+           ============================================ */
+        let gameState = 'menu'; // menu, playing, failing, win, fail
+        let gameTime = 0;
+        let timeLimit = 37;
+        let offTrackTime = 0;
+        let offTrackLimit = 3;
+        let cpCount = 0;
+        let floatingTexts = [];
+        let failReason = '';
+        let failDelay = 0;
+        let flashAlpha = 0;
+        let screenShake = { x: 0, y: 0, intensity: 0 };
+        let frameCount = 0;
+
+        /* ============================================
+           INPUT - Floating Joystick + Keyboard
+           ============================================ */
+        const base = document.getElementById('joystick-base');
+        const knob = document.getElementById('joystick-knob');
+        let input = { x: 0, y: 0 };
+        let isDragging = false;
+        let joystickOrigin = { x: 0, y: 0 };
+
+        const startDrag = (e) => {
+            if (gameState !== 'playing') return;
+            isDragging = true;
+            const cx = e.touches ? e.touches[0].clientX : e.clientX;
+            const cy = e.touches ? e.touches[0].clientY : e.clientY;
+            joystickOrigin = { x: cx, y: cy };
+            base.style.left = (cx - 55) + 'px';
+            base.style.top = (cy - 55) + 'px';
+            base.style.display = 'block';
+        };
+        const moveDrag = (e) => {
+            if (!isDragging) return;
+            const cx = e.touches ? e.touches[0].clientX : e.clientX;
+            const cy = e.touches ? e.touches[0].clientY : e.clientY;
+            let dx = cx - joystickOrigin.x;
+            let dy = cy - joystickOrigin.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            const maxDist = 42;
+            if (dist > maxDist) { dx = (dx / dist) * maxDist; dy = (dy / dist) * maxDist; }
+            knob.style.transform = `translate(${dx}px, ${dy}px)`;
+            input.x = dx / maxDist;
+            input.y = dy / maxDist;
+        };
+        const endDrag = () => {
+            isDragging = false;
+            base.style.display = 'none';
+            input = { x: 0, y: 0 };
+            knob.style.transform = 'translate(0,0)';
+        };
+
+        window.addEventListener('mousedown', startDrag);
+        window.addEventListener('touchstart', startDrag);
+        window.addEventListener('mousemove', moveDrag);
+        window.addEventListener('touchmove', moveDrag);
+        window.addEventListener('mouseup', endDrag);
+        window.addEventListener('touchend', endDrag);
+
+        const keys = {};
+        window.addEventListener('keydown', e => { keys[e.key.toLowerCase()] = true; });
+        window.addEventListener('keyup', e => { keys[e.key.toLowerCase()] = false; });
+
+        function getKeyboardInput() {
+            let kx = 0, ky = 0;
+            if (keys['a'] || keys['arrowleft']) kx -= 1;
+            if (keys['d'] || keys['arrowright']) kx += 1;
+            if (keys['w'] || keys['arrowup']) ky -= 1;
+            if (keys['s'] || keys['arrowdown']) ky += 1;
+            const len = Math.sqrt(kx * kx + ky * ky);
+            if (len > 1) { kx /= len; ky /= len; }
+            return { x: kx, y: ky };
+        }
+
+        /* ============================================
+           POLA HALFTONE POP-ART
+           ============================================ */
+        const dotCanvas = document.createElement('canvas');
+        dotCanvas.width = 14; dotCanvas.height = 14;
+        const dCtx = dotCanvas.getContext('2d');
+        dCtx.fillStyle = '#00b894';
+        dCtx.fillRect(0, 0, 14, 14);
+        dCtx.fillStyle = 'rgba(0,0,0,0.045)';
+        dCtx.beginPath();
+        dCtx.arc(7, 7, 4, 0, Math.PI * 2);
+        dCtx.fill();
+
+        let grassPattern = null;
+        function ensureGrassPattern() {
+            if (!grassPattern) grassPattern = ctx.createPattern(dotCanvas, 'repeat');
+        }
+
+        /* ============================================
+           HELPER: Rounded Rectangle
+           ============================================ */
+        function roundedRect(c, x, y, w, h, r) {
+            r = Math.min(r, w / 2, h / 2);
+            c.beginPath();
+            c.moveTo(x + r, y);
+            c.arcTo(x + w, y, x + w, y + h, r);
+            c.arcTo(x + w, y + h, x, y + h, r);
+            c.arcTo(x, y + h, x, y, r);
+            c.arcTo(x, y, x + w, y, r);
+            c.closePath();
+        }
+
+        /* ============================================
+           PRE-RENDER DUNIA STATIS
+           ============================================ */
+        const worldCanvas = document.createElement('canvas');
+        worldCanvas.width = WORLD_W;
+        worldCanvas.height = WORLD_H;
+        const wCtx = worldCanvas.getContext('2d');
+
+        function prerenderWorld() {
+            const c = wCtx;
+
+            /* Latar belakang lautan biru */
+            c.fillStyle = '#0984e3';
+            c.fillRect(0, 0, WORLD_W, WORLD_H);
+
+            /* Gelombang air kartun */
+            c.strokeStyle = 'rgba(255,255,255,0.08)';
+            c.lineWidth = 3;
+            for (let y = 0; y < WORLD_H; y += 40) {
+                c.beginPath();
+                for (let x = 0; x <= WORLD_W; x += 5) {
+                    const yy = y + Math.sin(x * 0.03 + y * 0.01) * 8;
+                    x === 0 ? c.moveTo(x, yy) : c.lineTo(x, yy);
+                }
+                c.stroke();
+            }
+
+            /* Pulau rumput */
+            const gPat = c.createPattern(dotCanvas, 'repeat');
+            c.fillStyle = gPat || '#00b894';
+            roundedRect(c, 25, 25, WORLD_W - 50, WORLD_H - 50, 70);
+            c.fill();
+
+            /* Border pulau */
+            c.strokeStyle = '#ffeaa7';
+            c.lineWidth = 12;
+            roundedRect(c, 25, 25, WORLD_W - 50, WORLD_H - 50, 70);
+            c.stroke();
+            c.strokeStyle = '#1e272e';
+            c.lineWidth = 4;
+            roundedRect(c, 25, 25, WORLD_W - 50, WORLD_H - 50, 70);
+            c.stroke();
+
+            /* Bunga */
+            flowers.forEach(f => {
+                c.fillStyle = f.color;
+                c.beginPath();
+                c.arc(f.x, f.y, f.size, 0, Math.PI * 2);
+                c.fill();
+                c.strokeStyle = 'rgba(0,0,0,0.15)';
+                c.lineWidth = 1;
+                c.stroke();
+            });
+
+            /* Pohon */
+            trees.forEach(t => drawTree(c, t));
+
+            /* === JALUR === */
+            c.lineWidth = TRACK_W + CURB_W * 2 + 8;
+            c.lineCap = 'round'; c.lineJoin = 'round';
+            c.strokeStyle = '#1e272e';
+            c.stroke(trackPath);
+
+            c.lineWidth = TRACK_W + CURB_W * 2;
+            c.setLineDash([18, 18]);
+            c.strokeStyle = '#d63031';
+            c.stroke(trackPath);
+            c.lineDashOffset = 18;
+            c.strokeStyle = '#ffffff';
+            c.stroke(trackPath);
+            c.setLineDash([]);
+            c.lineDashOffset = 0;
+
+            c.lineWidth = TRACK_W;
+            c.strokeStyle = '#2d3436';
+            c.stroke(trackPath);
+
+            c.lineWidth = TRACK_W - 10;
+            c.strokeStyle = 'rgba(255,255,255,0.02)';
+            c.stroke(trackPath);
+
+            c.lineWidth = 3;
+            c.setLineDash([16, 14]);
+            c.strokeStyle = 'rgba(255,255,255,0.5)';
+            c.stroke(trackPath);
+            c.setLineDash([]);
+
+            /* Minyak licin di jalur */
+            oilSlicks.forEach(oil => {
+                // Bayangan
+                c.fillStyle = 'rgba(0,0,0,0.15)';
+                c.beginPath();
+                c.ellipse(oil.x + 2, oil.y + 3, oil.radius + 2, oil.radius * 0.6 + 2, 0.15, 0, Math.PI * 2);
+                c.fill();
+                // Puddel utama
+                c.fillStyle = '#1e272e';
+                c.beginPath();
+                c.ellipse(oil.x, oil.y, oil.radius, oil.radius * 0.6, 0.15, 0, Math.PI * 2);
+                c.fill();
+                // Kilau
+                c.fillStyle = 'rgba(116,185,255,0.35)';
+                c.beginPath();
+                c.ellipse(oil.x - 4, oil.y - 2, oil.radius * 0.4, oil.radius * 0.22, 0.15, 0, Math.PI * 2);
+                c.fill();
+                // Tanda warning
+                c.fillStyle = '#ffeaa7';
+                c.font = 'bold 10px Nunito';
+                c.textAlign = 'center';
+                c.textBaseline = 'middle';
+                c.fillText('!', oil.x + 6, oil.y + 2);
+            });
+
+            /* Garis start & finish */
+            drawCheckerLine(c, 500, 2940, TRACK_W, 18);
+            drawCheckerLine(c, 770, 90, TRACK_W, 18);
+
+            /* Label START & FINISH */
+            c.fillStyle = '#ffeaa7';
+            c.font = 'bold 22px Bungee';
+            c.textAlign = 'center';
+            c.textBaseline = 'middle';
+            c.strokeStyle = '#1e272e';
+            c.lineWidth = 4;
+            c.strokeText('START', 500, 2900);
+            c.fillText('START', 500, 2900);
+            c.strokeText('FINISH', 770, 140);
+            c.fillText('FINISH', 770, 140);
+
+            /* Label seksi trek */
+            c.font = 'bold 13px Nunito';
+            c.fillStyle = 'rgba(255,255,255,0.35)';
+            c.fillText('SLALOM', 770, 1500);
+            c.fillText('S-CURVE', 385, 800);
+            c.font = 'bold 11px Nunito';
+            c.fillStyle = 'rgba(255,234,167,0.3)';
+            c.fillText('LICIN!', 770, 1970);
+            c.fillText('LICIN!', 360, 830);
+        }
+
+        function drawTree(c, t) {
+            c.fillStyle = 'rgba(0,0,0,0.12)';
+            c.beginPath();
+            c.ellipse(t.x + 4, t.y + 6, t.size * 0.9, t.size * 0.5, 0, 0, Math.PI * 2);
+            c.fill();
+            c.fillStyle = '#6d4c23';
+            c.strokeStyle = '#1e272e';
+            c.lineWidth = 2;
+            roundedRect(c, t.x - 3, t.y - 2, 6, 12, 2);
+            c.fill(); c.stroke();
+            c.fillStyle = t.green;
+            c.beginPath();
+            c.arc(t.x, t.y - 6, t.size, 0, Math.PI * 2);
+            c.fill();
+            c.strokeStyle = '#1e272e';
+            c.lineWidth = 2.5;
+            c.stroke();
+            c.fillStyle = 'rgba(255,255,255,0.2)';
+            c.beginPath();
+            c.arc(t.x - t.size * 0.25, t.y - 6 - t.size * 0.25, t.size * 0.45, 0, Math.PI * 2);
+            c.fill();
+        }
+
+        function drawCheckerLine(c, cx, cy, width, height) {
+            const sq = 9;
+            const cols = Math.ceil(width / sq);
+            const rows = Math.ceil(height / sq);
+            const startX = cx - width / 2;
+            const startY = cy - height / 2;
+            for (let r = 0; r < rows; r++) {
+                for (let col = 0; col < cols; col++) {
+                    c.fillStyle = (r + col) % 2 === 0 ? '#1e272e' : '#dfe6e9';
+                    c.fillRect(startX + col * sq, startY + r * sq, sq, sq);
+                }
+            }
+            c.strokeStyle = '#1e272e';
+            c.lineWidth = 2;
+            c.strokeRect(startX, startY, cols * sq, rows * sq);
+        }
+
+        prerenderWorld();
+
+        /* ============================================
+           DETEKSI DI ATAS JALUR
+           ============================================ */
+        function checkOnTrack(px, py) {
+            let minDist = Infinity;
+            for (const cp of denseCenter) {
+                const d = (px - cp.x) ** 2 + (py - cp.y) ** 2;
+                if (d < minDist) minDist = d;
+            }
+            return Math.sqrt(minDist) < HALF_TRACK + 5;
+        }
+
+        /* ============================================
+           TEKS MENGAMBANG
+           ============================================ */
+        function addFloating(x, y, text, color, size) {
+            floatingTexts.push({ x, y, text, color, size: size || 18, life: 60, maxLife: 60, vy: -1.8 });
+        }
+
+        /* ============================================
+           TAMPILKAN LAYAR GAGAL
+           ============================================ */
+        function showFail() {
+            gameState = 'fail';
+            document.getElementById('fail-text').innerHTML =
+                failReason + '<br>Checkpoint: <strong>' + cpCount + '/4</strong>';
+            document.getElementById('fail-screen').style.display = 'flex';
+            document.getElementById('hud').style.display = 'none';
+            document.getElementById('offtrack-warning').style.display = 'none';
+        }
+
+        /* ============================================
+           PHYSICS & UPDATE
+           ============================================ */
+        const ACCEL = 0.42;
+        const FRICTION = 0.93;
+        const OFF_FRICTION = 0.84;
+        const OIL_FRICTION = 0.975;
+        const MAX_SPEED = 3.5;
+
+        function updateGame(dt) {
+            /* Saat dalam state "failing" - jeda sebelum layar gagal muncul */
+            if (gameState === 'failing') {
+                failDelay--;
+                // Animasi cone jatuh tetap jalan
+                for (let cone of cones) {
+                    if (cone.hit && cone.alpha > 0) {
+                        cone.fallAng += 0.15;
+                        cone.alpha -= 0.02;
+                        cone.x += Math.cos(cone.fallAng) * 0.3;
+                    }
+                }
+                // Teks mengambang tetap bergerak
+                floatingTexts = floatingTexts.filter(ft => ft.life > 0);
+                for (let ft of floatingTexts) { ft.y += ft.vy; ft.life--; }
+                // Screen shake decay
+                if (screenShake.intensity > 0) {
+                    screenShake.intensity *= 0.9;
+                    if (screenShake.intensity < 0.5) screenShake.intensity = 0;
+                }
+                // Flash decay
+                if (flashAlpha > 0) flashAlpha -= 0.025;
+
+                if (failDelay <= 0) showFail();
+                return;
+            }
+
+            if (gameState !== 'playing') return;
+
+            /* Gabungkan input */
+            const kb = getKeyboardInput();
+            let ix = input.x || kb.x;
+            let iy = input.y || kb.y;
+            if (input.x && kb.x) ix = (input.x + kb.x) / 2;
+            if (input.y && kb.y) iy = (input.y + kb.y) / 2;
+
+            /* Akselerasi */
+            player.vx += ix * ACCEL;
+            player.vy += iy * ACCEL;
+
+            /* Cek di atas jalur */
+            player.onTrack = checkOnTrack(player.x, player.y);
+
+            /* Cek di atas minyak licin */
+            player.onOil = false;
+            for (let oil of oilSlicks) {
+                const dx = player.x - oil.x;
+                const dy = player.y - oil.y;
+                if (Math.sqrt(dx * dx + dy * dy) < oil.radius + 8) {
+                    player.onOil = true;
+                    break;
+                }
+            }
+
+            /* Efek minyak licin - motor tergelincir */
+            if (player.onOil) {
+                player.vx += (Math.random() - 0.5) * 0.6;
+                player.vy += (Math.random() - 0.5) * 0.6;
+            }
+
+            /* Friksi sesuai kondisi */
+            let fric = player.onTrack ? FRICTION : OFF_FRICTION;
+            if (player.onOil) fric = OIL_FRICTION;
+            player.vx *= fric;
+            player.vy *= fric;
+
+            /* Batas kecepatan */
+            const speed = Math.sqrt(player.vx * player.vx + player.vy * player.vy);
+            if (speed > MAX_SPEED) {
+                player.vx = (player.vx / speed) * MAX_SPEED;
+                player.vy = (player.vy / speed) * MAX_SPEED;
+            }
+
+            /* Update posisi */
+            player.x += player.vx;
+            player.y += player.vy;
+
+            /* Update sudut hadap motor */
+            if (speed > 0.5) {
+                player.angle = Math.atan2(player.vy, player.vx);
+            }
+
+            /* Batasan dunia */
+            player.x = Math.max(50, Math.min(WORLD_W - 50, player.x));
+            player.y = Math.max(50, Math.min(WORLD_H - 50, player.y));
+
+            /* === KOLISI CONE = GAGAL! === */
+            for (let cone of cones) {
+                if (cone.hit) continue;
+                const dx = player.x - cone.x;
+                const dy = player.y - cone.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < 20) {
+                    cone.hit = true;
+                    failReason = 'Mengenai cone rintangan!';
+                    addFloating(cone.x, cone.y - 35, 'GAGAL!', '#ff7675', 30);
+                    screenShake.intensity = 16;
+                    flashAlpha = 0.7;
+                    gameState = 'failing';
+                    failDelay = 55;
+                    return;
+                }
+            }
+
+            /* Animasi cone jatuh */
+            for (let cone of cones) {
+                if (cone.hit && cone.alpha > 0) {
+                    cone.fallAng += 0.15;
+                    cone.alpha -= 0.02;
+                    cone.x += Math.cos(cone.fallAng) * 0.3;
+                }
+            }
+
+            /* === KELUAR JALUR TERLALU LAMA = GAGAL! === */
+            if (!player.onTrack) {
+                offTrackTime += dt / 1000;
+                document.getElementById('offtrack-warning').style.display = 'block';
+                document.getElementById('offtrack-fill').style.width =
+                    Math.min(100, (offTrackTime / offTrackLimit) * 100) + '%';
+                if (offTrackTime >= offTrackLimit) {
+                    failReason = 'Keluar dari jalur terlalu lama!';
+                    addFloating(player.x, player.y - 35, 'KELUAR JALUR!', '#ff7675', 24);
+                    screenShake.intensity = 12;
+                    flashAlpha = 0.5;
+                    gameState = 'failing';
+                    failDelay = 55;
+                    return;
+                }
+            } else {
+                offTrackTime = Math.max(0, offTrackTime - dt / 400);
+                if (offTrackTime <= 0) {
+                    document.getElementById('offtrack-warning').style.display = 'none';
+                    document.getElementById('offtrack-fill').style.width = '0%';
+                } else {
+                    document.getElementById('offtrack-fill').style.width =
+                        Math.min(100, (offTrackTime / offTrackLimit) * 100) + '%';
+                }
+            }
+
+            /* === WAKTU HABIS = GAGAL! === */
+            gameTime += dt / 1000;
+            const remaining = Math.max(0, timeLimit - gameTime);
+            document.getElementById('timer').textContent = Math.ceil(remaining);
+
+            // Timer berkedip saat waktu tersisa < 30 detik
+            const timerBox = document.getElementById('timer-box');
+            if (remaining <= 30) {
+                timerBox.classList.add('danger');
+            } else {
+                timerBox.classList.remove('danger');
+            }
+
+            if (remaining <= 0) {
+                failReason = 'Waktu habis!';
+                addFloating(player.x, player.y - 35, 'WAKTU HABIS!', '#ff7675', 24);
+                screenShake.intensity = 10;
+                flashAlpha = 0.5;
+                gameState = 'failing';
+                failDelay = 55;
+                return;
+            }
+
+            /* Deteksi Checkpoint */
+            for (let cp of checkpoints) {
+                if (cp.passed) continue;
+                const dx = player.x - cp.x;
+                const dy = player.y - cp.y;
+                if (Math.sqrt(dx * dx + dy * dy) < HALF_TRACK) {
+                    cp.passed = true;
+                    cpCount++;
+                    document.getElementById('cp-count').textContent = cpCount;
+                    addFloating(cp.x, cp.y - 40, 'CP ' + cp.id + ' OK!', '#55efc4', 24);
+                }
+            }
+
+            /* Deteksi Garis Finish */
+            if (cpCount === 4) {
+                const dx = player.x - 770;
+                const dy = player.y - 100;
+                if (Math.sqrt(dx * dx + dy * dy) < HALF_TRACK) {
+                    gameState = 'win';
+                    const finalTime = gameTime.toFixed(1);
+                    document.getElementById('win-text').innerHTML =
+                        `Selamat <strong>${playerName.toUpperCase()}</strong>!<br>Waktu: <strong>${finalTime}s</strong><br>Anda lulus ujian tahap 1!`;
+                    document.getElementById('win-screen').style.display = 'flex';
+                    document.getElementById('hud').style.display = 'none';
+                    document.getElementById('offtrack-warning').style.display = 'none';
+                }
+            }
+
+            /* Kamera mengikuti pemain */
+            const targetCamX = player.x - canvas.width / 2;
+            const targetCamY = player.y - canvas.height / 2;
+            camera.x += (targetCamX - camera.x) * 0.08;
+            camera.y += (targetCamY - camera.y) * 0.08;
+
+            /* Screen shake decay */
+            if (screenShake.intensity > 0) {
+                screenShake.intensity *= 0.9;
+                if (screenShake.intensity < 0.5) screenShake.intensity = 0;
+            }
+
+            /* Flash decay */
+            if (flashAlpha > 0) flashAlpha -= 0.03;
+
+            /* Update teks mengambang */
+            floatingTexts = floatingTexts.filter(ft => ft.life > 0);
+            for (let ft of floatingTexts) {
+                ft.y += ft.vy;
+                ft.life--;
+            }
+        }
+
+        /* ============================================
+           RENDERING
+           ============================================ */
+        function drawPlayer() {
+            ctx.save();
+            ctx.translate(player.x, player.y);
+            ctx.rotate(player.angle + Math.PI / 2);
+
+            // Wobble saat di atas minyak
+            if (player.onOil) {
+                ctx.rotate(Math.sin(Date.now() * 0.02) * 0.15);
+            }
+
+            // Bayangan
+            ctx.fillStyle = 'rgba(0,0,0,0.2)';
+            ctx.beginPath();
+            ctx.ellipse(0, 6, 14, 6, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Body motor
+            ctx.fillStyle = '#d63031';
+            ctx.strokeStyle = '#1e272e';
+            ctx.lineWidth = 3;
+            roundedRect(ctx, -11, -18, 22, 26, 5);
+            ctx.fill(); ctx.stroke();
+
+            // Roda depan
+            ctx.fillStyle = '#2d3436';
+            ctx.beginPath();
+            ctx.arc(0, -14, 6, 0, Math.PI * 2);
+            ctx.fill(); ctx.stroke();
+
+            // Roda belakang
+            ctx.beginPath();
+            ctx.arc(0, 10, 6, 0, Math.PI * 2);
+            ctx.fill(); ctx.stroke();
+
+            // Helm/Pengendara
+            ctx.fillStyle = '#74b9ff';
+            ctx.beginPath();
+            ctx.arc(0, -6, 8, Math.PI, 0);
+            ctx.fill(); ctx.stroke();
+
+            // Visor helm
+            ctx.fillStyle = '#dfe6e9';
+            ctx.beginPath();
+            ctx.arc(0, -6, 8, Math.PI + 0.3, -0.3);
+            ctx.fill();
+
+            // Handlebar
+            ctx.strokeStyle = '#636e72';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(-13, -6);
+            ctx.lineTo(13, -6);
+            ctx.stroke();
+            ctx.strokeStyle = '#1e272e';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            ctx.restore();
+        }
+
+        function drawMinimap() {
+            const mmW = 90, mmH = 280;
+            const mmX = canvas.width - mmW - 12;
+            const mmY = canvas.height - mmH - 12;
+
+            ctx.fillStyle = 'rgba(9,132,227,0.75)';
+            ctx.strokeStyle = '#1e272e';
+            ctx.lineWidth = 3;
+            roundedRect(ctx, mmX, mmY, mmW, mmH, 10);
+            ctx.fill(); ctx.stroke();
+
+            ctx.fillStyle = 'rgba(0,184,148,0.5)';
+            roundedRect(ctx, mmX + 3, mmY + 3, mmW - 6, mmH - 6, 7);
+            ctx.fill();
+
+            ctx.save();
+            ctx.translate(mmX, mmY);
+            ctx.scale(mmW / WORLD_W, mmH / WORLD_H);
+
+            // Jalur
+            ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+            ctx.lineWidth = TRACK_W * 0.3;
+            ctx.lineCap = 'round';
+            ctx.stroke(trackPath);
+
+            // Minyak di minimap
+            ctx.fillStyle = 'rgba(45,52,54,0.6)';
+            for (let oil of oilSlicks) {
+                ctx.beginPath();
+                ctx.arc(oil.x, oil.y, oil.radius * 1.5, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // Cone di minimap
+            ctx.fillStyle = 'rgba(255,118,117,0.7)';
+            for (let cone of cones) {
+                if (cone.hit) continue;
+                ctx.beginPath();
+                ctx.arc(cone.x, cone.y, 10, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            ctx.restore();
+
+            // Titik pemain
+            const px = mmX + (player.x / WORLD_W) * mmW;
+            const py = mmY + (player.y / WORLD_H) * mmH;
+            ctx.fillStyle = '#d63031';
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(px, py, 5, 0, Math.PI * 2);
+            ctx.fill(); ctx.stroke();
+        }
+
+        function render() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            ensureGrassPattern();
+            ctx.fillStyle = '#0984e3';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.save();
+
+            // Kamera + screen shake
+            const shakeX = screenShake.intensity > 0 ? (Math.random() - 0.5) * screenShake.intensity : 0;
+            const shakeY = screenShake.intensity > 0 ? (Math.random() - 0.5) * screenShake.intensity : 0;
+            ctx.translate(-camera.x + shakeX, -camera.y + shakeY);
+
+            // Dunia statis
+            ctx.drawImage(worldCanvas, 0, 0);
+
+            // Kilau dinamis minyak licin
+            for (let oil of oilSlicks) {
+                const shimmer = Math.sin(Date.now() * 0.004 + oil.x * 0.1) * 0.2;
+                ctx.fillStyle = `rgba(116,185,255,${Math.max(0, 0.12 + shimmer)})`;
+                ctx.beginPath();
+                ctx.ellipse(oil.x - 3, oil.y - 2, oil.radius * 0.35, oil.radius * 0.18, 0.15, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // Checkpoint (animasi berdenyut)
+            for (let cp of checkpoints) {
+                const pulse = Math.sin(Date.now() * 0.005) * 0.3;
+                ctx.save();
+                ctx.globalAlpha = cp.passed ? 0.3 : (0.5 + pulse);
+
+                ctx.fillStyle = cp.passed ? '#636e72' : '#ffeaa7';
+                ctx.beginPath();
+                ctx.arc(cp.x, cp.y, 28, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.strokeStyle = '#1e272e';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+
+                ctx.globalAlpha = 1;
+                ctx.fillStyle = '#1e272e';
+                ctx.font = 'bold 14px Nunito';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(cp.passed ? '✓' : 'CP' + cp.id, cp.x, cp.y);
+                ctx.restore();
+            }
+
+            // Cone
+            for (let cone of cones) {
+                if (cone.alpha <= 0) continue;
+                ctx.save();
+                ctx.globalAlpha = Math.max(0, cone.alpha);
+                ctx.translate(cone.x, cone.y);
+                ctx.rotate(cone.hit ? cone.fallAng : 0);
+
+                // Bayangan
+                ctx.fillStyle = 'rgba(0,0,0,0.12)';
+                ctx.beginPath();
+                ctx.ellipse(2, 8, 7, 3, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Badan cone
+                ctx.fillStyle = '#ff7675';
+                ctx.beginPath();
+                ctx.moveTo(0, -14);
+                ctx.lineTo(-9, 8);
+                ctx.lineTo(9, 8);
+                ctx.closePath();
+                ctx.fill();
+                ctx.strokeStyle = '#1e272e';
+                ctx.lineWidth = 2.5;
+                ctx.stroke();
+
+                // Strip putih
+                ctx.fillStyle = '#dfe6e9';
+                ctx.fillRect(-5, -2, 10, 3);
+                ctx.fillRect(-3, -8, 6, 3);
+
+                ctx.restore();
+            }
+
+            // Motor Pemain
+            drawPlayer();
+
+            // Teks mengambang
+            for (let ft of floatingTexts) {
+                ctx.globalAlpha = ft.life / ft.maxLife;
+                ctx.font = `bold ${ft.size}px Bungee`;
+                ctx.textAlign = 'center';
+                ctx.strokeStyle = '#1e272e';
+                ctx.lineWidth = 4;
+                ctx.strokeText(ft.text, ft.x, ft.y);
+                ctx.fillStyle = ft.color;
+                ctx.fillText(ft.text, ft.x, ft.y);
+                ctx.globalAlpha = 1;
+            }
+
+            ctx.restore(); // Akhir kamera
+
+            // Vignette merah saat keluar jalur
+            if (!player.onTrack && (gameState === 'playing' || gameState === 'failing')) {
+                const intensity = Math.min(1, offTrackTime / offTrackLimit);
+                const grad = ctx.createRadialGradient(
+                    canvas.width / 2, canvas.height / 2, canvas.width * 0.25,
+                    canvas.width / 2, canvas.height / 2, canvas.width * 0.7
+                );
+                grad.addColorStop(0, 'rgba(214,48,49,0)');
+                grad.addColorStop(1, `rgba(214,48,49,${(0.45 * intensity).toFixed(3)})`);
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+
+            // Flash overlay saat gagal
+            if (flashAlpha > 0) {
+                ctx.fillStyle = `rgba(255,50,50,${flashAlpha.toFixed(3)})`;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+
+            // Indikator minyak licin di tepi layar
+            if (player.onOil && gameState === 'playing') {
+                const oilPulse = Math.sin(Date.now() * 0.01) * 0.15 + 0.25;
+                ctx.strokeStyle = `rgba(45,52,54,${oilPulse.toFixed(3)})`;
+                ctx.lineWidth = 8;
+                ctx.strokeRect(4, 4, canvas.width - 8, canvas.height - 8);
+            }
+
+            // Minimap
+            drawMinimap();
+        }
+
+        /* ============================================
+           GAME LOOP
+           ============================================ */
+        let lastTime = 0;
+        function gameLoop(timestamp) {
+            const dt = Math.min(timestamp - lastTime, 50); // Cap dt untuk menghindari lompatan
+            lastTime = timestamp;
+            frameCount++;
+
+            if (gameState === 'playing' || gameState === 'failing') {
+                updateGame(dt);
+            }
+            render();
+            requestAnimationFrame(gameLoop);
+        }
+
+        /* ============================================
+           MULAI GAME
+           ============================================ */
+        camera.x = player.x - canvas.width / 2;
+        camera.y = player.y - canvas.height / 2;
+
+        document.getElementById('start-btn').addEventListener('click', () => {
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('hud').style.display = 'flex';
+            gameState = 'playing';
+        });
+
+        requestAnimationFrame(gameLoop);
+    </script>
+</body>
+
+</html>

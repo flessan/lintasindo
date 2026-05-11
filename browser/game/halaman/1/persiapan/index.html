@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LintasIndo - Persiapan Berkas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        /* ============================
+           CSS Custom Properties (Playful Retro)
+           ============================ */
+        :root {
+            --bg: #f0f4f8;
+            --fg: #1a1a2e;
+            --muted: #607D8B;
+            --accent: #F5A623;
+            --accent-glow: rgba(245, 166, 35, 0.4);
+            --red: #E74C3C;
+            --red-light: #ffefa9;
+            --green: #43A047;
+            --green-hover: #2E7D32;
+            --blue: #0984e3;
+            --card: rgba(255, 255, 255, 0.95);
+            --card-border: rgba(0, 0, 0, 0.1);
+            --font-display: 'Fredoka', cursive, sans-serif;
+            --font-body: 'Nunito', sans-serif;
+            --sh: 4px 4px 0 var(--fg);
+            --r: 12px;
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
+            font-family: var(--font-body);
+            background: var(--bg);
+            color: var(--fg);
+            cursor: default;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* ============================
+           Background & Overlays
+           ============================ */
+        #bg-layer {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-size: cover;
+            background-position: center;
+            background-color: var(--bg);
+            transition: opacity 1.2s ease;
+        }
+
+        #bg-layer.fade {
+            opacity: 0;
+        }
+
+        #overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 2;
+            background: linear-gradient(180deg,
+                    rgba(255, 255, 255, 0.1) 0%,
+                    rgba(255, 255, 255, 0) 40%,
+                    rgba(255, 255, 255, 0.4) 70%,
+                    rgba(255, 255, 255, 0.9) 100%);
+            pointer-events: none;
+        }
+
+        /* ============================
+           Karakter Sprite
+           ============================ */
+        #chara-container {
+            position: fixed;
+            bottom: 240px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        #chara-container.hidden {
+            opacity: 0;
+        }
+
+        .chara-img {
+            max-height: 42vh;
+            max-width: 70vw;
+            object-fit: contain;
+            filter: drop-shadow(6px 6px 0 rgba(0, 0, 0, 0.15));
+        }
+
+        .chara-enter {
+            animation: charaSlideUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        @keyframes charaSlideUp {
+            from {
+                transform: translateY(40px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* ============================
+           Dialog Box (Retro Pop)
+           ============================ */
+        #dialog-wrapper {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 20;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+
+        #dialog-wrapper.visible {
+            opacity: 1;
+        }
+
+        #dialog-box {
+            width: 100%;
+            max-width: 900px;
+            background: var(--card);
+            border: 4px solid var(--fg);
+            border-radius: var(--r);
+            box-shadow: var(--sh);
+            padding: 24px 32px 28px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        #char-name {
+            position: absolute;
+            top: -18px;
+            left: 24px;
+            background: var(--blue);
+            color: #fff;
+            border: 3px solid var(--fg);
+            font-family: var(--font-display);
+            font-weight: 700;
+            padding: 6px 20px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            box-shadow: 3px 3px 0 var(--fg);
+        }
+
+        #char-name.hidden-name {
+            opacity: 0;
+        }
+
+        #char-name.name-player {
+            background: var(--green);
+        }
+
+        #dialog-text {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: var(--fg);
+            min-height: 4.5rem;
+            font-weight: 700;
+        }
+
+        #next-indicator {
+            position: absolute;
+            bottom: 14px;
+            right: 22px;
+            color: var(--blue);
+            font-size: 1.2rem;
+            animation: bounce-arrow 1s infinite ease-in-out;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        #next-indicator.show {
+            opacity: 1;
+        }
+
+        @keyframes bounce-arrow {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(5px);
+            }
+        }
+
+        /* ============================
+           Pilihan Item (Custom Cards)
+           ============================ */
+        #choice-container {
+            position: fixed;
+            inset: 0;
+            z-index: 30;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(8px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+            padding: 20px;
+        }
+
+        #choice-container.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .choice-title {
+            font-family: var(--font-display);
+            font-size: clamp(1.2rem, 4vw, 1.6rem);
+            font-weight: 700;
+            color: var(--fg);
+            text-align: center;
+            background: var(--accent);
+            padding: 8px 24px;
+            border-radius: 50px;
+            border: 3px solid var(--fg);
+            box-shadow: 3px 3px 0 var(--fg);
+        }
+
+        .choice-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .item-card {
+            background: #fff;
+            border: 3px solid var(--fg);
+            border-radius: var(--r);
+            box-shadow: 4px 4px 0 var(--fg);
+            padding: 16px;
+            cursor: pointer;
+            transition: transform .1s, box-shadow .1s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .item-card:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0 var(--fg);
+        }
+
+        .item-card:active {
+            transform: translate(2px, 2px);
+            box-shadow: 0 0 0 var(--fg);
+        }
+
+        .item-imgs {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+            background: #f0f4f8;
+            padding: 10px;
+            border-radius: 8px;
+            width: 100%;
+            border: 2px dashed rgba(0, 0, 0, 0.1);
+        }
+
+        .item-imgs img {
+            height: 60px;
+            width: auto;
+            object-fit: contain;
+            filter: drop-shadow(2px 2px 0 rgba(0, 0, 0, 0.1));
+        }
+
+        .item-label {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--fg);
+            text-align: center;
+        }
+
+        /* ============================
+           Transisi Fade Putih
+           ============================ */
+        #transition {
+            position: fixed;
+            inset: 0;
+            z-index: 500;
+            background: #fff;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1s ease;
+        }
+
+        #transition.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* ============================
+           Responsif
+           ============================ */
+        @media (max-width: 600px) {
+            .chara-img {
+                max-height: 35vh;
+            }
+
+            #dialog-box {
+                padding: 20px 20px 24px;
+            }
+
+            #dialog-text {
+                font-size: 1rem;
+                min-height: 3.5rem;
+            }
+
+            .item-imgs img {
+                height: 50px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.2s !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <audio id="myBGM" src="../../../gudang/tio/dan.mp3" loop></audio>
+
+    <script>
+        // Fungsi untuk memutar audio setelah interaksi user
+        function startBGM() {
+            const audio = document.getElementById('myBGM');
+            audio.play().catch(error => {
+                console.log("Autoplay diblokir, menunggu klik user.");
+            });
+            // Hapus event listener setelah musik berhasil jalan sekali
+            document.removeEventListener('click', startBGM);
+            document.removeEventListener('touchstart', startBGM);
+        }
+
+        // Jalankan musik begitu user klik atau tap di mana saja di halaman ini
+        document.addEventListener('click', startBGM);
+        document.addEventListener('touchstart', startBGM);
+    </script>
+
+    <div id="bg-layer" aria-hidden="true"></div>
+    <div id="overlay" aria-hidden="true"></div>
+
+    <div id="chara-container" class="hidden" aria-hidden="true">
+        <img id="chara-img" class="chara-img" alt="Karakter" />
+    </div>
+
+    <div id="dialog-wrapper">
+        <div id="dialog-box" role="button" tabindex="0" aria-label="Klik untuk lanjut">
+            <div id="char-name" class="hidden-name">Petugas</div>
+            <div id="dialog-text"></div>
+            <div id="next-indicator"><i class="fa-solid fa-caret-down"></i></div>
+        </div>
+    </div>
+
+    <div id="choice-container" role="menu">
+        <div class="choice-title">Pilih Berkas yang Benar!</div>
+        <div class="choice-grid" id="choice-grid"></div>
+    </div>
+
+    <div id="transition" aria-hidden="true"></div>
+
+    <!-- Font Awesome untuk Ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <script>
+        /* ================================================
+           Konfigurasi Aset
+           ================================================ */
+        const ASSETS = {
+            bg: {
+                ngambil: '../../../gudang/bg/bgngambil.png'
+            },
+            chara: {
+                polisi: '../../../gudang/man/polpol.png',
+                emak: '../../../gudang/man/emak.png'
+            },
+            items: {
+                benar1: '../../../gudang/benda/itembenar1.png',
+                benar2: '../../../gudang/benda/itembenar2.png',
+                benar3: '../../../gudang/benda/itembenar3.png',
+                salah1: '../../../gudang/benda/itemsalah1.png',
+                salah2: '../../../gudang/benda/itemsalah2.png',
+                salah3: '../../../gudang/benda/itemsalah3.png'
+            }
+        };
+
+        /* ================================================
+           Baca Nama Pemain dari URL
+           ================================================ */
+        const urlParams = new URLSearchParams(window.location.search);
+        const playerName = urlParams.get('tio') || 'Warga';
+
+        /* ================================================
+           Data Cerita & Sistem Dialog
+           ================================================ */
+        let currentQueue = [];
+        let currentIndex = 0;
+        let isTyping = false;
+        let typeInterval = null;
+
+        const mainDialogs = [
+            { type: 'narration', text: "Pagi ini beda. Kamu senyum. Karena hari ini, kamu resmi jadi pengendara. Langkah pertama: buat SIM C.", bg: ASSETS.bg.ngambil },
+            { type: 'dialog', name: playerName, text: `Lagu favorit muter pelan di Tape Kompo rusak. Aku cek dompet, aku liat SIM C masih kosong di dompet. Tapi nanti sore, bakal ada fotoku di sana. Nggak sabar!` },
+            { type: 'dialog', name: "Emak", text: `Eh ${playerName}, bangun! Jangan main hp terus! Kamu kan mau bikin SIM. Jangan lupa sarapan.`, chara: ASSETS.chara.emak },
+            { type: 'dialog', name: "Emak", text: "Ayo lihat, dari berkas-berkas di meja ini, mana saja yang menjadi syarat pembuatan SIM?" },
+            // , chara: ASSETS.chara.polisi },
+            {
+                type: 'choice', text: "Pilih kelompok berkas yang benar:", choices: [
+                    { label: "Berkas Persyaratan", imgs: [ASSETS.items.benar2, ASSETS.items.benar1, ASSETS.items.benar3], branch: 'branchRight' },
+                    { label: "Ijazah & Surat Lulus", imgs: [ASSETS.items.salah2, ASSETS.items.salah1], branch: 'branchWrong1' },
+                    { label: "Rapor & Ijazah", imgs: [ASSETS.items.salah3, ASSETS.items.salah2], branch: 'branchWrong2' }
+                ]
+            }
+        ];
+
+        const branches = {
+            branchRight: [
+                { type: 'dialog', name: playerName, text: "Mantepp! KTP asli, Surat Keterangan Sehat, dan Fotokopi KTP. Semuanya lengkap! ya kan, mak?" },
+                { type: 'dialog', name: "Emak", text: "Pinter anak mama, ayo kita berangkat ke satpas!", chara: ASSETS.chara.emak }
+            ],
+            branchWrong1: [
+                { type: 'dialog', name: "Emak", text: "Hei, hei... Ijazah dan Surat Keterangan Lulus itu untuk melamar kerja, bukan bikin SIM!", chara: ASSETS.chara.emak },
+                { type: 'dialog', name: "Emak", text: "Yang kamu butuhin itu KTP asli dan Surat Keterangan Sehat dari Dokter. Coba pilih lagi ya!", chara: ASSETS.chara.emak }
+            ],
+            branchWrong2: [
+                { type: 'dialog', name: "Emak", text: "Nilai Rapor dan Ijazah? Ini bukan sekolah, nak! Kita mau ke SATPAS.", chara: ASSETS.chara.emak },
+                { type: 'dialog', name: "Emak", text: "Syaratnya KTP asli dan Surat Keterangan Sehat. Coba perhatikan lagi meja itu!", chara: ASSETS.chara.emak }
+            ]
+        };
+
+        /* ================================================
+           Referensi DOM
+           ================================================ */
+        const $bgLayer = document.getElementById('bg-layer');
+        const $charaContainer = document.getElementById('chara-container');
+        const $charaImg = document.getElementById('chara-img');
+        const $dialogWrapper = document.getElementById('dialog-wrapper');
+        const $dialogBox = document.getElementById('dialog-box');
+        const $charName = document.getElementById('char-name');
+        const $dialogText = document.getElementById('dialog-text');
+        const $nextIndicator = document.getElementById('next-indicator');
+        const $choiceContainer = document.getElementById('choice-container');
+        const $choiceGrid = document.getElementById('choice-grid');
+        const $transition = document.getElementById('transition');
+
+        /* ================================================
+           Fungsi Engine Visual Novel
+           ================================================ */
+        function changeBackground(url) {
+            if (!url || $bgLayer.style.backgroundImage.includes(url)) return;
+            $bgLayer.classList.add('fade');
+            setTimeout(() => {
+                $bgLayer.style.backgroundImage = `url('${url}')`;
+                $bgLayer.classList.remove('fade');
+            }, 600);
+        }
+
+        function showCharacter(url) {
+            if (url) {
+                if ($charaImg.src.endsWith(url.split('?')[0]) && !$charaContainer.classList.contains('hidden')) return;
+                $charaImg.src = url;
+                $charaContainer.classList.remove('hidden');
+                $charaImg.classList.remove('chara-enter');
+                void $charaImg.offsetWidth;
+                $charaImg.classList.add('chara-enter');
+            } else {
+                $charaContainer.classList.add('hidden');
+            }
+        }
+
+        function typeText(text, callback) {
+            isTyping = true;
+            $nextIndicator.classList.remove('show');
+            $dialogText.textContent = '';
+            let i = 0;
+            clearInterval(typeInterval);
+            typeInterval = setInterval(() => {
+                $dialogText.textContent += text.charAt(i);
+                i++;
+                if (i >= text.length) {
+                    clearInterval(typeInterval);
+                    isTyping = false;
+                    $nextIndicator.classList.add('show');
+                    if (callback) callback();
+                }
+            }, 30);
+        }
+
+        function skipTypeText(text) {
+            clearInterval(typeInterval);
+            $dialogText.textContent = text;
+            isTyping = false;
+            $nextIndicator.classList.add('show');
+        }
+
+        function processDialog() {
+            if (currentIndex >= currentQueue.length) return;
+            const data = currentQueue[currentIndex];
+
+            if (data.bg) changeBackground(data.bg);
+
+            if (data.type === 'narration') {
+                $charName.classList.add('hidden-name');
+                showCharacter(null);
+                typeText(data.text);
+            }
+            else if (data.type === 'dialog') {
+                $charName.classList.remove('hidden-name');
+                $charName.textContent = data.name;
+                if (data.nameClass) $charName.classList.add(data.nameClass);
+                else $charName.classList.remove('name-player');
+                showCharacter(data.chara);
+                typeText(data.text);
+            }
+            else if (data.type === 'choice') {
+                $charName.classList.add('hidden-name');
+                typeText(data.text, () => { renderChoices(data.choices); });
+            }
+        }
+
+        function renderChoices(choices) {
+            $choiceGrid.innerHTML = '';
+            choices.forEach(c => {
+                const card = document.createElement('div');
+                card.className = 'item-card';
+
+                let imgsHtml = '<div class="item-imgs">';
+                c.imgs.forEach(imgUrl => {
+                    imgsHtml += `<img src="${imgUrl}" alt="Berkas">`;
+                });
+                imgsHtml += '</div>';
+
+                card.innerHTML = `
+                    ${imgsHtml}
+                    <div class="item-label">${c.label}</div>
+                `;
+
+                card.onclick = () => handleChoice(c.branch);
+                $choiceGrid.appendChild(card);
+            });
+            $choiceContainer.classList.add('active');
+        }
+
+        function handleChoice(branchName) {
+            $choiceContainer.classList.remove('active');
+
+            // Jika salah, kembali ke pilihan setelah dialog peringatan
+            if (branchName.startsWith('branchWrong')) {
+                currentQueue = [...branches[branchName], mainDialogs[mainDialogs.length - 1]];
+            } else {
+                currentQueue = branches[branchName];
+            }
+
+            currentIndex = 0;
+            processDialog();
+        }
+
+        function handleNext() {
+            if (isTyping) {
+                skipTypeText(currentQueue[currentIndex].text);
+                if (currentQueue[currentIndex].type === 'choice') renderChoices(currentQueue[currentIndex].choices);
+            } else {
+                if ($choiceContainer.classList.contains('active')) return;
+                currentIndex++;
+                if (currentIndex < currentQueue.length) {
+                    processDialog();
+                } else {
+                    // Selesai dialog halaman ini, pindah ke halaman 3
+                    goToNextPage();
+                }
+            }
+        }
+
+        $dialogBox.addEventListener('click', handleNext);
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleNext(); }
+        });
+
+        /* ================================================
+           Navigasi Halaman Berikutnya
+           ================================================ */
+        function goToNextPage() {
+            $transition.classList.add('active');
+            setTimeout(() => {
+                window.location.href = '../Satuan-Penyelenggara-Administrasi-SIM?tio=' + encodeURIComponent(playerName);
+            }, 1200);
+        }
+
+        /* ================================================
+           Inisialisasi Halaman
+           ================================================ */
+        function init() {
+            $transition.classList.add('active');
+
+            if (mainDialogs[0].bg) {
+                $bgLayer.style.backgroundImage = `url('${mainDialogs[0].bg}')`;
+            }
+
+            setTimeout(() => {
+                $transition.classList.remove('active');
+                $dialogWrapper.classList.add('visible');
+
+                currentQueue = mainDialogs;
+                currentIndex = 0;
+                processDialog();
+            }, 800);
+        }
+
+        init();
+    </script>
+</body>
+
+</html>

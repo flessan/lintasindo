@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LintasIndo - Ujian Teori</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        /* ============================
+           CSS Custom Properties (Gabungan VN & Retro Game)
+           ============================ */
+        :root {
+            --bg: #1a1a2e;
+            --fg: #ffffff;
+            --muted: #a0a0b0;
+            --accent: #F5A623;
+            --accent-glow: rgba(245, 166, 35, 0.4);
+            --red: #D32F2F;
+            --green: #2E7D32;
+            --blue: #0D47A1;
+            --card: rgba(10, 10, 20, 0.92);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --font-display: 'Fredoka', cursive, sans-serif;
+            --font-body: 'Nunito', sans-serif;
+            /* Retro Game Vars */
+            --brd: #0D1B2A;
+            --sh: 4px 4px 0 var(--brd);
+            --r: 12px;
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
+            font-family: var(--font-body);
+            background: var(--bg);
+            color: var(--fg);
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* ============================
+           Background & Overlays
+           ============================ */
+        #bg-layer {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-size: cover;
+            background-position: center;
+            background-color: var(--bg);
+            transition: opacity 1.2s ease;
+        }
+
+        #vignette {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            background: radial-gradient(ellipse at 50% 50%, transparent 40%, rgba(0, 0, 0, 0.7) 100%);
+            pointer-events: none;
+        }
+
+        #overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 2;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, transparent 40%, rgba(0, 0, 0, 0.8) 100%);
+            pointer-events: none;
+        }
+
+        /* ============================
+           VN Intro / Outro Elements
+           ============================ */
+        #vn-layer {
+            position: fixed;
+            inset: 0;
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 16px;
+            transition: opacity 0.6s ease;
+        }
+
+        #vn-layer.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .chara-container-vn {
+            position: absolute;
+            bottom: 220px;
+            left: 50%;
+            transform: translateX(-50%);
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .chara-container-vn.hidden {
+            opacity: 0;
+        }
+
+        .chara-img-vn {
+            max-height: 45vh;
+            max-width: 70vw;
+            object-fit: contain;
+            filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.8));
+            animation: charaSlideUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        @keyframes charaSlideUp {
+            from {
+                transform: translateY(40px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        #dialog-box {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card);
+            backdrop-filter: blur(16px);
+            border: 3px solid var(--brd);
+            box-shadow: var(--sh);
+            border-radius: var(--r);
+            padding: 24px 32px 28px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        #char-name {
+            position: absolute;
+            top: -16px;
+            left: 24px;
+            background: var(--accent);
+            color: #1a1a2e;
+            font-family: var(--font-display);
+            font-weight: 700;
+            padding: 6px 20px;
+            border: 3px solid var(--brd);
+            border-radius: 10px;
+            font-size: 0.95rem;
+            box-shadow: 3px 3px 0 var(--brd);
+        }
+
+        #dialog-text {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: #fff;
+            min-height: 4.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        #next-indicator {
+            position: absolute;
+            bottom: 12px;
+            right: 20px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 10px solid var(--accent);
+            animation: bounce-down 1s infinite ease-in-out;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        #next-indicator.show {
+            opacity: 1;
+        }
+
+        @keyframes bounce-down {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(5px);
+            }
+        }
+
+        /* Tombol Aksi Retro */
+        .action-btn {
+            display: block;
+            width: 100%;
+            max-width: 320px;
+            margin: 20px auto 0;
+            padding: 14px 28px;
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff;
+            background: var(--blue);
+            border: 3px solid var(--brd);
+            border-radius: var(--r);
+            box-shadow: var(--sh);
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: transform .1s, box-shadow .1s;
+        }
+
+        .action-btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0 var(--brd);
+        }
+
+        .action-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 0 0 0 var(--brd);
+        }
+
+        .action-btn.green {
+            background: var(--green);
+        }
+
+        /* ============================
+           Quiz Game UI
+           ============================ */
+        #quiz-layer {
+            position: fixed;
+            inset: 0;
+            z-index: 15;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            overflow-y: auto;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.6s ease;
+        }
+
+        #quiz-layer.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .quiz-header {
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .q-chip {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 0.9rem;
+            background: var(--card);
+            border: 2px solid var(--brd);
+            border-radius: 8px;
+            box-shadow: 3px 3px 0 var(--brd);
+            padding: 6px 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .q-chip i {
+            font-size: 0.8rem;
+        }
+
+        .q-chip.acc i {
+            color: var(--accent);
+        }
+
+        .q-chip.red i {
+            color: var(--red);
+        }
+
+        .progress-bar {
+            width: 100%;
+            max-width: 600px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid var(--brd);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--blue);
+            transition: width 0.3s ease;
+        }
+
+        .question-card {
+            width: 100%;
+            max-width: 600px;
+            background: var(--card);
+            backdrop-filter: blur(16px);
+            border: 3px solid var(--brd);
+            box-shadow: var(--sh);
+            border-radius: var(--r);
+            padding: 24px;
+        }
+
+        .q-visual {
+            width: 100%;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .q-visual img {
+            max-width: 140px;
+            max-height: 140px;
+            object-fit: contain;
+            filter: drop-shadow(3px 3px 0 var(--brd));
+        }
+
+        .q-visual .q-icon {
+            font-size: 4rem;
+            filter: drop-shadow(3px 3px 0 var(--brd));
+        }
+
+        .q-text {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            text-align: center;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .opt-btn {
+            width: 100%;
+            background: #fff;
+            border: 3px solid var(--brd);
+            border-radius: 8px;
+            box-shadow: 3px 3px 0 var(--brd);
+            padding: 12px 16px;
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--brd);
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: transform .1s, box-shadow .1s, background .15s, color .15s;
+        }
+
+        .opt-btn:hover:not(.disabled) {
+            transform: translate(-2px, -2px);
+            box-shadow: 5px 5px 0 var(--brd);
+        }
+
+        .opt-btn:active:not(.disabled) {
+            transform: translate(2px, 2px);
+            box-shadow: 0 0 0 var(--brd);
+        }
+
+        .opt-label {
+            flex-shrink: 0;
+            width: 30px;
+            height: 30px;
+            border: 2px solid var(--brd);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 0.85rem;
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .opt-btn.correct {
+            background: var(--green) !important;
+            color: #fff !important;
+            border-color: #1a3c1e;
+        }
+
+        .opt-btn.correct .opt-label {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .opt-btn.wrong {
+            background: var(--red) !important;
+            color: #fff !important;
+            border-color: #7a1a1a;
+            animation: shk .4s;
+        }
+
+        .opt-btn.wrong .opt-label {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .opt-btn.disabled {
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        .opt-btn.disabled.correct {
+            opacity: 1;
+        }
+
+        @keyframes shk {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            20% {
+                transform: translateX(-6px);
+            }
+
+            40% {
+                transform: translateX(6px);
+            }
+
+            60% {
+                transform: translateX(-3px);
+            }
+
+            80% {
+                transform: translateX(3px);
+            }
+        }
+
+        .explanation-box {
+            margin-top: 16px;
+            padding: 12px;
+            background: #FFF8E1;
+            border: 3px solid var(--brd);
+            border-radius: 8px;
+            box-shadow: 3px 3px 0 var(--brd);
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--brd);
+            line-height: 1.5;
+            display: none;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .explanation-box.show {
+            display: flex;
+        }
+
+        .explanation-box i {
+            color: var(--accent);
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        /* ============================
+           Transisi & Responsif
+           ============================ */
+        #transition {
+            position: fixed;
+            inset: 0;
+            z-index: 500;
+            background: #000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1s ease;
+        }
+
+        #transition.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        @media (max-width: 600px) {
+            .opt-btn {
+                padding: 10px 12px;
+                font-size: 0.85rem;
+            }
+
+            .question-card {
+                padding: 16px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.2s !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Audio Tag (Hidden) -->
+    <audio id="myBGM" src="../../../gudang/tio/bro.mp3" loop></audio>
+
+    <script>
+        // Fungsi untuk memutar audio setelah interaksi user
+        function startBGM() {
+            const audio = document.getElementById('myBGM');
+            audio.play().catch(error => {
+                console.log("Autoplay diblokir, menunggu klik user.");
+            });
+            // Hapus event listener setelah musik berhasil jalan sekali
+            document.removeEventListener('click', startBGM);
+            document.removeEventListener('touchstart', startBGM);
+        }
+
+        // Jalankan musik begitu user klik atau tap di mana saja di halaman ini
+        document.addEventListener('click', startBGM);
+        document.addEventListener('touchstart', startBGM);
+    </script>
+
+    <div id="bg-layer" style="background-image: url('../../../gudang/bg/otwquiz.png');" aria-hidden="true"></div>
+    <div id="vignette" aria-hidden="true"></div>
+    <div id="overlay" aria-hidden="true"></div>
+
+    <!-- Quiz UI -->
+    <div id="quiz-layer">
+        <div class="quiz-header">
+            <div class="q-chip"><i class="fa-solid fa-list-ol"></i> <span id="q-progress">1/5</span></div>
+            <div class="q-chip acc"><i class="fa-solid fa-star"></i> <span id="q-score">0</span></div>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="q-fill" style="width: 0%"></div>
+        </div>
+
+        <div class="question-card">
+            <div class="q-visual" id="q-visual"></div>
+            <div class="q-text" id="q-text"></div>
+            <div class="options-grid" id="q-options"></div>
+            <div class="explanation-box" id="q-expl">
+                <i class="fa-solid fa-lightbulb"></i>
+                <span id="q-expl-text"></span>
+            </div>
+        </div>
+        <button class="action-btn green" id="q-next" style="display: none;">Lanjut <i
+                class="fa-solid fa-arrow-right"></i></button>
+    </div>
+
+    <!-- VN Intro/Outro Layer -->
+    <div id="vn-layer">
+        <div class="chara-container-vn" id="chara-vn" aria-hidden="true">
+            <img id="chara-img-vn" class="chara-img-vn" src="../../../gudang/man/polpol.png" alt="Petugas" />
+        </div>
+        <div id="dialog-box" role="button" tabindex="0">
+            <div id="char-name">Petugas Polisi</div>
+            <div id="dialog-text"></div>
+            <div id="next-indicator"></div>
+        </div>
+    </div>
+
+    <div id="transition" aria-hidden="true"></div>
+
+    <script>
+        /* ================================================
+           Konfigurasi & State
+           ================================================ */
+        const ASSETS = {
+            chara: { polisi: '../../../gudang/man/polpol.png' },
+            // Path untuk gambar rambu (mengikuti referensi)
+            signs: (cat, code) => `../../../gudang/rambu-${cat}/${code}.png`
+        };
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const playerName = urlParams.get('tio') || 'Warga';
+
+        // State Mesin VN
+        let vnQueue = [];
+        let vnIndex = 0;
+        let isTyping = false;
+        let typeInterval = null;
+
+        // State Quiz (Diambil dari referensi dan disederhanakan)
+        const QS = [
+            { img: ASSETS.signs('larangan', '8lc'), cat: 'larangan', code: '8Lc', q: 'Rambu batas kecepatan 30 km/jam ditempatkan di...', o: ['Jalan tol', 'Area sekolah / pemukiman', 'Jalan tol dalam kota', 'Jalan provinsi'], c: 1, e: '30 km/jam biasa di area sekolah, pasar, atau pemukiman padat.' },
+            { img: null, icon: 'fa-helmet-safety', fb: '#0D47A1', q: 'Apa yang wajib dipakai saat berkendara sepeda motor?', o: ['Kacamata hitam', 'Helm SNI', 'Sarung tangan', 'Jaket tebal'], c: 1, e: 'Helm SNI (Standar Nasional Indonesia) wajib dipakai pengendara dan penumpang motor.' },
+            { img: ASSETS.signs('peringatan', '1a'), cat: 'peringatan', code: '1A', q: 'Apa arti rambu peringatan ini?', o: ['Jalan menikung ke kiri', 'Tikungan tajam ke kanan', 'Persimpangan jalan', 'Jalan menanjak'], c: 1, e: 'Rambu peringatan tikungan tajam ke kanan. Kurangi kecepatan.' },
+            { img: null, icon: 'fa-traffic-light', fb: '#D32F2F', q: 'Saat lampu lalu lintas menyala merah, apa yang harus dilakukan?', o: ['Percepat agar cepat lewat', 'Berhenti di belakang garis berhenti', 'Klakson agar lampu hijau', 'Pelan-pelan tetap jalan'], c: 1, e: 'Lampu merah wajib berhenti. Tunggu di belakang garis berhenti sampai lampu hijau.' },
+            { img: ASSETS.signs('perintah', '1a'), cat: 'perintah', code: '1A', q: 'Rambu perintah ini mengharuskan pengendara untuk...', o: ['Berhenti', 'Lurus wajib', 'Belok kanan', 'Putar balik'], c: 1, e: 'Pengendara wajib tetap lurus. Tidak boleh belok kiri maupun kanan.' },
+            { img: null, icon: 'fa-mobile-screen', fb: '#D32F2F', q: 'Menggunakan handphone saat berkendara...', o: ['Boleh sebentar', 'Dilarang keras', 'Boleh saat lampu merah', 'Boleh pakai bluetooth'], c: 1, e: 'UU Lalu Lintas melarang penggunaan handphone saat berkendara karena membahayakan.' },
+            { img: ASSETS.signs('larangan', '3l'), cat: 'larangan', code: '3L', q: 'Rambu ini melarang kita untuk...', o: ['Berhenti sesaat', 'Parkir kendaraan', 'Melintas', 'Berbelok'], c: 1, e: 'Dilarang parkir. Tidak boleh meninggalkan kendaraan berhenti di area ini.' },
+            { img: ASSETS.signs('peringatan', '13a'), cat: 'peringatan', code: '13A', q: 'Rambu polisi tidur artinya ada...', o: ['Polisi berjaga', 'Undak-undak / speed bump', 'Zebra cross', 'Lampu merah'], c: 1, e: 'Ada polisi tidur atau undak-undak di depan. Kurangi kecepatan.' }
+        ];
+
+        let quizQuestions = [];
+        let currentQIndex = 0;
+        let score = 0;
+        const PASS_SCORE = 4; // Butuh 4 dari 5 benar untuk lulus
+
+        /* ================================================
+           Referensi DOM
+           ================================================ */
+        const $vnLayer = document.getElementById('vn-layer');
+        const $charaVn = document.getElementById('chara-vn');
+        const $dialogBox = document.getElementById('dialog-box');
+        const $dialogText = document.getElementById('dialog-text');
+        const $nextIndicator = document.getElementById('next-indicator');
+        const $quizLayer = document.getElementById('quiz-layer');
+        const $transition = document.getElementById('transition');
+
+        /* ================================================
+           Fungsi Visual Novel
+           ================================================ */
+        function typeText(text, callback) {
+            isTyping = true;
+            $nextIndicator.classList.remove('show');
+            $dialogText.textContent = '';
+            let i = 0;
+            clearInterval(typeInterval);
+            typeInterval = setInterval(() => {
+                $dialogText.textContent += text.charAt(i);
+                i++;
+                if (i >= text.length) {
+                    clearInterval(typeInterval);
+                    isTyping = false;
+                    $nextIndicator.classList.add('show');
+                    if (callback) callback();
+                }
+            }, 30);
+        }
+
+        function skipTypeText(text) {
+            clearInterval(typeInterval);
+            $dialogText.textContent = text;
+            isTyping = false;
+            $nextIndicator.classList.add('show');
+        }
+
+        function processVnDialog() {
+            if (vnIndex >= vnQueue.length) return;
+            const data = vnQueue[vnIndex];
+
+            if (data.type === 'dialog') {
+                document.getElementById('char-name').textContent = data.name;
+                document.getElementById('char-name').style.background = data.nameClass === 'name-player' ? 'var(--green)' : 'var(--accent)';
+                $charaVn.classList.toggle('hidden', !data.chara);
+                typeText(data.text);
+            } else if (data.type === 'action') {
+                $nextIndicator.classList.remove('show');
+                data.action();
+            }
+        }
+
+        function handleVnNext() {
+            if (isTyping) {
+                skipTypeText(vnQueue[vnIndex].text);
+            } else {
+                vnIndex++;
+                if (vnIndex < vnQueue.length) {
+                    processVnDialog();
+                }
+            }
+        }
+
+        $dialogBox.addEventListener('click', handleVnNext);
+
+        /* ================================================
+           Fungsi Quiz (Mini-game)
+           ================================================ */
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function startQuiz() {
+            // Ambil 5 soal acak
+            quizQuestions = shuffleArray([...QS]).slice(0, 5);
+            currentQIndex = 0;
+            score = 0;
+
+            // Sembunyikan VN, tampilkan Quiz
+            $vnLayer.classList.add('hidden');
+            setTimeout(() => {
+                $quizLayer.classList.add('active');
+                renderQuestion();
+            }, 600);
+        }
+
+        function renderQuestion() {
+            const q = quizQuestions[currentQIndex];
+            document.getElementById('q-progress').textContent = `${currentQIndex + 1}/5`;
+            document.getElementById('q-score').textContent = score;
+            document.getElementById('q-fill').style.width = `${(currentQIndex / 5) * 100}%`;
+
+            // Render Visual
+            const visualDiv = document.getElementById('q-visual');
+            if (q.img) {
+                visualDiv.innerHTML = `<img src="${q.img}" alt="Rambu" onerror="this.style.display='none'">`;
+            } else if (q.icon) {
+                visualDiv.innerHTML = `<i class="fa-solid ${q.icon} q-icon" style="color:${q.fb}"></i>`;
+            } else {
+                visualDiv.innerHTML = '';
+            }
+
+            // Render Teks & Opsi
+            document.getElementById('q-text').textContent = q.q;
+            const optsDiv = document.getElementById('q-options');
+            const labels = ['A', 'B', 'C', 'D'];
+
+            optsDiv.innerHTML = q.o.map((opt, i) => `
+            <button class="opt-btn" data-index="${i}">
+                <span class="opt-label">${labels[i]}</span>
+                <span>${opt}</span>
+            </button>
+        `).join('');
+
+            // Event Listener
+            optsDiv.querySelectorAll('.opt-btn').forEach(btn => {
+                btn.addEventListener('click', () => selectAnswer(parseInt(btn.dataset.index)));
+            });
+
+            // Reset UI
+            document.getElementById('q-expl').classList.remove('show');
+            document.getElementById('q-next').style.display = 'none';
+        }
+
+        function selectAnswer(index) {
+            const q = quizQuestions[currentQIndex];
+            const btns = document.querySelectorAll('.opt-btn');
+            const isCorrect = index === q.c;
+
+            // Nonaktifkan semua tombol
+            btns.forEach(btn => btn.classList.add('disabled'));
+
+            // Tandai jawaban benar
+            btns[q.c].classList.add('correct');
+
+            if (isCorrect) {
+                score++;
+                document.getElementById('q-score').textContent = score;
+                playAudio(true);
+            } else {
+                btns[index].classList.add('wrong');
+                playAudio(false);
+            }
+
+            // Tampilkan penjelasan
+            document.getElementById('q-expl-text').textContent = q.e;
+            document.getElementById('q-expl').classList.add('show');
+
+            // Tampilkan tombol lanjut
+            const nextBtn = document.getElementById('q-next');
+            if (currentQIndex >= 4) {
+                nextBtn.innerHTML = 'Lihat Hasil Ujian <i class="fa-solid fa-flag-checkered"></i>';
+            } else {
+                nextBtn.innerHTML = 'Soal Berikutnya <i class="fa-solid fa-arrow-right"></i>';
+            }
+            nextBtn.style.display = 'block';
+        }
+
+        document.getElementById('q-next').addEventListener('click', () => {
+            currentQIndex++;
+            if (currentQIndex < 5) {
+                renderQuestion();
+            } else {
+                finishQuiz();
+            }
+        });
+
+        function finishQuiz() {
+            $quizLayer.classList.remove('active');
+            $charaVn.classList.remove('hidden');
+            $vnLayer.classList.remove('hidden');
+
+            const isPassed = score >= PASS_SCORE;
+
+            if (isPassed) {
+                vnQueue = [
+                    { type: 'dialog', name: 'Petugas Polisi', chara: ASSETS.chara.polisi, text: "Luar biasa, " + playerName + "! Kamu menjawab " + score + " dari 5 soal dengan benar." },
+                    { type: 'dialog', name: 'Petugas Polisi', chara: ASSETS.chara.polisi, text: "Nilaimu cukup untuk lulus ujian teori SIM. Selamat!" },
+                    { type: 'dialog', name: playerName, chara: null, nameClass: 'name-player', text: "Terima kasih, Pak! Saya sangat senang." },
+                    { type: 'dialog', name: 'Petugas Polisi', chara: ASSETS.chara.polisi, text: "Sekarang saatnya kamu menuju tes selanjutnya, semangat!" },
+                    { type: 'action', action: goToNextPage }
+                ];
+            } else {
+                vnQueue = [
+                    { type: 'dialog', name: 'Petugas Polisi', chara: ASSETS.chara.polisi, text: "Sayang sekali, " + playerName + ". Kamu hanya menjawab " + score + " dari 5 soal dengan benar." },
+                    { type: 'dialog', name: 'Petugas Polisi', chara: ASSETS.chara.polisi, text: "Kamu belum lulus ujian teori. Tapi jangan menyerah!" },
+                    { type: 'dialog', name: 'Petugas Polisi', chara: ASSETS.chara.polisi, text: "Aku berikan kesempatan lagi. Pelajari rambu-rambunya dan coba lagi.", chara: ASSETS.chara.polisi },
+                    { type: 'action', action: startQuiz } // Ulangi quiz
+                ];
+            }
+
+            vnIndex = 0;
+            processVnDialog();
+        }
+
+        /* ================================================
+           Audio Sederhana (Web Audio API)
+           ================================================ */
+        let audioCtx;
+        function playAudio(correct) {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain).connect(audioCtx.destination);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+
+            if (correct) {
+                osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+                osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); // E5
+            } else {
+                osc.frequency.setValueAtTime(329.63, audioCtx.currentTime); // E4
+                osc.frequency.setValueAtTime(261.63, audioCtx.currentTime + 0.12); // C4
+                osc.type = 'triangle';
+            }
+            osc.start(audioCtx.currentTime);
+            osc.stop(audioCtx.currentTime + 0.3);
+        }
+
+        /* ================================================
+           Navigasi
+           ================================================ */
+        function goToNextPage() {
+            $nextIndicator.classList.remove('show');
+            $transition.classList.add('active');
+            setTimeout(() => {
+                window.location.href = '../../4/ancol?tio=' + encodeURIComponent(playerName);
+            }, 1200);
+        }
+
+        /* ================================================
+           Inisialisasi Halaman
+           ================================================ */
+        function init() {
+            $transition.classList.add('active');
+
+            setTimeout(() => {
+                $transition.classList.remove('active');
+
+                // Dialog intro sebelum quiz
+                vnQueue = [
+                    { type: 'dialog', name: 'Petugas Polisi', chara: ASSETS.chara.polisi, text: "Baiklah, ini dia ruangannya. Silakan duduk di depan komputer." },
+                    { type: 'dialog', name: playerName, chara: null, nameClass: 'name-player', text: "Siap, Pak." },
+                    { type: 'dialog', name: 'Petugas Polisi', chara: ASSETS.chara.polisi, text: "Kamu harus menjawab minimal 4 dari 5 pertanyaan dengan benar untuk lulus ujian teori." },
+                    { type: 'dialog', name: 'Petugas Polisi', chara: ASSETS.chara.polisi, text: "Baca baik-baik rambu-rambunya ya. Semoga beruntung!" },
+                    { type: 'action', action: startQuiz }
+                ];
+                vnIndex = 0;
+                processVnDialog();
+            }, 800);
+        }
+
+        init();
+    </script>
+</body>
+
+</html>
